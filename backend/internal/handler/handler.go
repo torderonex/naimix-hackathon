@@ -48,7 +48,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		participant.GET("/team/:id", h.GetParticipantsByTeamId)
 		participant.PUT("/:id", h.UpdateParticipant)
 	}
-
+	compare := v1.Group("/compare")
+	{
+		compare.POST("/", h.compare)
+	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return router
