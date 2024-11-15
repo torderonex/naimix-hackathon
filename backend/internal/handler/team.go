@@ -39,6 +39,7 @@ type teamReq struct {
 	User        int    `json:"user_id" binding:"required"`
 	Name        string `json:"name" binding:"required"`
 	Description string `json:"description" binding:"required"`
+	Id          int    `json:"id"`
 }
 
 // GetAllTeams godoc
@@ -139,7 +140,7 @@ func (h *Handler) UpdateTeam(c *gin.Context) {
 		return
 	}
 
-	err := h.service.UpdateTeam(c, entities.Team{Name: input.Name, Description: input.Description})
+	err := h.service.UpdateTeam(c, entities.Team{Name: input.Name, Description: input.Description, Id: input.Id})
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
