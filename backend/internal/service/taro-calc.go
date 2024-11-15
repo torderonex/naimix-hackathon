@@ -3,11 +3,13 @@ package service
 import (
 	"strconv"
 	"strings"
+	"time"
 )
 
-func calculateTarotNumber(birthdate string) int {
+func calculateTarotNumber(birthdate time.Time) int {
 	sum := 0
-	for _, char := range strings.ReplaceAll(birthdate, "-", "") {
+	birthdateStr := birthdate.Format("2006-01-02")
+	for _, char := range strings.ReplaceAll(birthdateStr, "-", "") {
 		num, _ := strconv.Atoi(string(char))
 		sum += num
 	}
@@ -54,6 +56,6 @@ func getTarotCard(number int) (int, string) {
 	return number, tarotCards[number]
 }
 
-func CalculateTaro(date string) (int, string) {
+func CalculateTaro(date time.Time) (int, string) {
 	return getTarotCard(calculateTarotNumber(date))
 }
