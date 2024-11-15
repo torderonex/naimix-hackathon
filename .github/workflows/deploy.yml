@@ -29,6 +29,8 @@ jobs:
             # Navigate to the project directory
             cd ~/naimix-hackathon || exit
           
+            export PATH=$PATH:/home/myuser/go/bin:/usr/local/go/bin/go
+
             git fetch origin
             git reset --hard origin/main
 
