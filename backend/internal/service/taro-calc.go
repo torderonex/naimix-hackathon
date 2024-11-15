@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/fullstakilla/naimix-hackathon/backend/internal/entities"
 	"strconv"
 	"strings"
 	"time"
@@ -26,7 +27,7 @@ func calculateTarotNumber(birthdate time.Time) int {
 	return sum
 }
 
-func getTarotCard(number int) (int, string) {
+func getTarotCard(number int) entities.TarotCard {
 	tarotCards := map[int]string{
 		0:  "The Fool",
 		1:  "The Magician",
@@ -53,9 +54,12 @@ func getTarotCard(number int) (int, string) {
 		22: "The Fool",
 	}
 
-	return number, tarotCards[number]
+	return entities.TarotCard{
+		Name:   tarotCards[number],
+		Number: number,
+	}
 }
 
-func CalculateTaro(date time.Time) (int, string) {
+func CalculateTaro(date time.Time) entities.TarotCard {
 	return getTarotCard(calculateTarotNumber(date))
 }

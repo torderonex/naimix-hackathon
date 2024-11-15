@@ -52,7 +52,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	}
 	compare := v1.Group("/compare")
 	{
-		compare.POST("/", h.compare)
+		compare.POST("/two", h.compareTwoWithDescription)
+		compare.POST("/lot", h.compareLot)
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
