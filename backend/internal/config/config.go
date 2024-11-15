@@ -19,8 +19,13 @@ type Config struct {
 	ServerDomain string           `mapstructure:"server_domain"`
 	Postgres     PostgresDatabase `yaml:"postgres"`
 	HTTPServer   HTTPServer       `mapstructure:"http_server"`
+	Gpt          YandexGptApi
 }
 
+type YandexGptApi struct {
+	OAuth2Token string
+	Dir         string
+}
 type HTTPServer struct {
 	Port    string        `yaml:"port"`
 	Timeout time.Duration `yaml:"timeout"`

@@ -12,18 +12,18 @@ import (
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        input  body      loginDto  true  "User credentials"
+// @Param        input  body      signupReq  true  "User credentials"
 // @Success      200    {object}  map[string]interface{}  "token"="JWT token"
 // @Failure      400    {object}  map[string]string "error"="Bad request"
 // @Failure      500    {object}  map[string]string "error"="Internal server error"
 // @Router       /api/v1/auth/signup [post]
 func (h *Handler) register(c *gin.Context) {
-	var input loginDto
+	var input signupReq
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	_, err := h.service.Authorization.CreateUser(c, entities.User{Username: input.Username, Password: input.Password})
+	_, err := h.service.Authorization.CreateUser(c, entities.User{Username: input.Username, Password: input.Password, Email: input.Email})
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -39,8 +39,14 @@ func (h *Handler) register(c *gin.Context) {
 	})
 }
 
-type loginDto struct {
+type signupReq struct {
 	Username string `json:"username" binding:"required"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type loginReq struct {
+	Login    string `json:"login" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -50,20 +56,20 @@ type loginDto struct {
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        input  body      loginDto  true  "User credentials"
+// @Param        input  body      loginReq  true  "User credentials"
 // @Success      200    {object}  map[string]interface{}  "token"="JWT token"
 // @Failure      400    {object}  map[string]string "error"="Bad request"
 // @Failure      500    {object}  map[string]string "error"="Internal server error"
 // @Router       /api/v1/auth/login [post]
 func (h *Handler) login(c *gin.Context) {
-	var input loginDto
+	var input loginReq
 
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	token, err := h.service.Authorization.GenerateToken(c, input.Username, input.Password)
+	token, err := h.service.Authorization.GenerateToken(c, input.Login, input.Password)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

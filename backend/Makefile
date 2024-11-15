@@ -31,6 +31,6 @@ migrate-down:
 	goose -dir $(MIGRATION_DIR) postgres "$(DB_DSN)" down
 
 .PHONY: migrate-create
-migrate-down:
+migrate-create:
 	@echo "Creating new migrate file..."
-	goose -dir $(MIGRATION_DIR) postgres "$(DB_DSN)" create
+	goose -dir $(MIGRATION_DIR) postgres "$(DB_DSN)" create $(name) sql

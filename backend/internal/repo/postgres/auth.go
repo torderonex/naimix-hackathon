@@ -18,8 +18,8 @@ func NewAuthRepo(db *sqlx.DB) *AuthRepo {
 
 func (r AuthRepo) CreateUser(ctx context.Context, u entities.User) (int, error) {
 	var id int
-	query := "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id"
-	row := r.Db.QueryRowContext(ctx, query, u.Username, u.Password)
+	query := "INSERT INTO users (username, password, email) VALUES ($1, $2) RETURNING id"
+	row := r.Db.QueryRowContext(ctx, query, u.Username, u.Password, u.Email)
 	if err := row.Scan(&id); err != nil {
 		return 0, err
 	}
@@ -33,10 +33,10 @@ func (r AuthRepo) GetAllUsers(ctx context.Context) ([]entities.User, error) {
 	return users, err
 }
 
-func (r AuthRepo) GetUserByNickNPass(ctx context.Context, nickname, password string) (entities.User, error) {
+func (r AuthRepo) GetUserByCredentials(ctx context.Context, email, password string) (entities.User, error) {
 	var user entities.User
-	query := "SELECT * FROM users WHERE username = $1 AND password = $2"
-	err := r.Db.GetContext(ctx, &user, query, nickname, password)
+	query := "SELECT * FROM users WHERE email = $1 AND password = $2"
+	err := r.Db.GetContext(ctx, &user, query, email, password)
 	return user, err
 }
 

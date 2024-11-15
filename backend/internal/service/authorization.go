@@ -44,7 +44,7 @@ func (s *AuthService) CreateUser(ctx context.Context, user entities.User) (int, 
 }
 
 func (s *AuthService) GenerateToken(ctx context.Context, login, password string) (string, error) {
-	user, err := s.repo.GetUserByNickNPass(ctx, login, generatePasswordHash(password))
+	user, err := s.repo.GetUserByCredentials(ctx, login, generatePasswordHash(password))
 	if err != nil {
 		return "", err
 	}

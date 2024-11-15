@@ -23,5 +23,5 @@ type Authorization interface {
 	GetAllUsers(ctx context.Context) ([]entities.User, error)
 	GetUserById(ctx context.Context, id int) (entities.User, error)
 	DeleteUserById(ctx context.Context, id int) error
-	GetUserByNickNPass(ctx context.Context, nickname, password string) (entities.User, error)
+	GetUserByCredentials(ctx context.Context, email, password string) (entities.User, error)
 }
