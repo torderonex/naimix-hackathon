@@ -13,7 +13,7 @@ func (h *Handler) AddTeam(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	_, err := h.service.CreateTeam(c, entities.Team{Name: input.Name, Description: input.Description})
+	_, err := h.service.CreateTeam(c, entities.Team{Name: input.Name, Description: input.Description, UserID: input.User})
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -25,6 +25,7 @@ func (h *Handler) AddTeam(c *gin.Context) {
 }
 
 type teamReq struct {
+	User        int    `json:"user_id" binding:"required"`
 	Name        string `json:"name" binding:"required"`
 	Description string `json:"description" binding:"required"`
 }

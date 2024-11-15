@@ -44,7 +44,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		participant.POST("/add", h.AddParticipant)
 		participant.GET("/all", h.GetAllParticipants)
 		participant.GET("/:id", h.GetParticipantById)
-		participant.GET("/team/:team_id", h.GetParticipantsByTeamId)
+		participant.GET("/team/:id", h.GetParticipantsByTeamId)
 		participant.PUT("/:id", h.UpdateParticipant)
 	}
 
