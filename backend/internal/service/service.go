@@ -33,6 +33,7 @@ type Team interface {
 	GetTeamById(ctx context.Context, id int) (entities.Team, error)
 	GetTeamsByUserId(ctx context.Context, userId int) ([]entities.Team, error)
 	UpdateTeam(ctx context.Context, t entities.Team) error
+	DeleteTeamById(ctx context.Context, id int) error
 }
 
 type Participant interface {
@@ -41,4 +42,5 @@ type Participant interface {
 	GetParticipantById(ctx context.Context, id int) (entities.Participant, error)
 	GetParticipantsByTeamId(ctx context.Context, teamId int) ([]entities.Participant, error)
 	UpdateParticipant(ctx context.Context, p entities.Participant) error
+	DeleteParticipantById(ctx context.Context, id int) error
 }
