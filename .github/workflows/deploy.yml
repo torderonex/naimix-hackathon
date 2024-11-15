@@ -23,47 +23,54 @@ jobs:
           SERVER: ${{ secrets.SERVER }}
           USERNAME: ${{ secrets.USERNAME }}
         run: |
-          # Test SSH connectivity to the server
+          # Проверим подключение через SSH
+          echo "Testing SSH connectivity..."
           ssh -o StrictHostKeyChecking=no "$USERNAME@$SERVER" "echo 'SSH connection successful'"
 
-          # Execute commands on the server
+          # Выполняем команды на сервере
           ssh -o StrictHostKeyChecking=no "$USERNAME@$SERVER" << 'EOF'
-            # Ensure that Go, Goose, and Swag are available by setting PATH explicitly
+            echo "Running on server: $(hostname)"
+            echo "Current directory: $(pwd)"
+            echo "Current PATH: $PATH"
+
+            # Обновляем PATH для Go, Goose, и Swag
             export PATH=$PATH:/home/$USERNAME/go/bin:/usr/local/go/bin
+            echo "Updated PATH: $PATH"
 
-            # Navigate to the project directory
+            # Убедимся, что Go, Goose и Swag установлены
+            echo "Checking Go installation..."
+            go version || { echo "Go is not installed!"; exit 1; }
+            echo "Checking Goose installation..."
+            goose -version || { echo "Goose is not installed!"; exit 1; }
+            echo "Checking Swag installation..."
+            swag --version || { echo "Swag is not installed!"; exit 1; }
+
+            # Перейдем в проект
             cd ~/naimix-hackathon/backend || exit
+            echo "Current directory after cd: $(pwd)"
 
-            # Pull the latest changes from the repository
+            # Заберем последние изменения из репозитория
             echo "Fetching latest code..."
             git fetch origin
             git reset --hard origin/main
             
-            # Check if Go, Goose, and Swag are available
-            echo "Checking Go installation..."
-            go version || { echo "Go not installed!"; exit 1; }
-            echo "Checking Goose installation..."
-            goose -version || { echo "Goose not installed!"; exit 1; }
-            echo "Checking Swag installation..."
-            swag --version || { echo "Swag not installed!"; exit 1; }
-
-            # Run migrations
+            # Запустим миграции
             echo "Running migrations..."
             make migrate-up | sed 's|postgresql://[^"]*|postgresql://***REMOVED***|g'
 
-            # Generate Swagger documentation
+            # Генерация Swagger документации
             echo "Generating Swagger documentation..."
             make swag
 
-            # Build the project
+            # Сборка проекта
             echo "Building the project..."
             make build
 
-            # Stop the existing application if running
+            # Остановка старого приложения
             echo "Stopping the existing application..."
             pkill -f './bin/main' || true
 
-            # Start the new application
+            # Запуск нового приложения
             echo "Starting the new application..."
             nohup ./bin/main > /dev/null 2>&1 &
           EOF
