@@ -27,6 +27,8 @@ jobs:
 
           # Execute commands on the server
           ssh -o StrictHostKeyChecking=no "$USERNAME@$SERVER" << 'EOF'
+            exec bash -l
+            
             export PATH=$PATH:/home/$USERNAME/go/bin:/usr/local/go/bin
             echo "Updated PATH: $PATH"
             
