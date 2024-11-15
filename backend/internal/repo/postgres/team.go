@@ -52,3 +52,9 @@ func (r TeamRepo) UpdateTeam(ctx context.Context, t entities.Team) error {
 	_, err := r.Db.ExecContext(ctx, query, t.Name, t.Description, t.Id)
 	return err
 }
+
+func (r TeamRepo) DeleteTeamById(ctx context.Context, id int) error {
+	query := "DELETE FROM teams WHERE id = $1"
+	_, err := r.Db.ExecContext(ctx, query, id)
+	return err
+}

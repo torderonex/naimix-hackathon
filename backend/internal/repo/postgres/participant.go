@@ -52,3 +52,9 @@ func (r ParticipantRepo) UpdateParticipant(ctx context.Context, p entities.Parti
 	_, err := r.Db.ExecContext(ctx, query, p.Name, p.Role, p.BirthDate, p.BirthPlace, p.Id)
 	return err
 }
+
+func (r ParticipantRepo) DeleteParticipantById(ctx context.Context, id int) error {
+	query := "DELETE FROM participants WHERE id = $1"
+	_, err := r.Db.ExecContext(ctx, query, id)
+	return err
+}

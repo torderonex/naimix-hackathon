@@ -55,3 +55,11 @@ func (s *ParticipantService) UpdateParticipant(ctx context.Context, p entities.P
 	}
 	return nil
 }
+
+func (s *ParticipantService) DeleteParticipantById(ctx context.Context, id int) error {
+	err := s.repo.DeleteParticipantById(ctx, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

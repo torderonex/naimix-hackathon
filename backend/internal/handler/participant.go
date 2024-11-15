@@ -150,3 +150,33 @@ func (h *Handler) UpdateParticipant(c *gin.Context) {
 		"status": "ok",
 	})
 }
+
+// DeleteParticipantById godoc
+// @Summary      Delete a participant by ID
+// @Description  Delete a participant from the database by its ID.
+// @Tags         participant
+// @Accept       json
+// @Produce      json
+// @Param        id     path      int  true  "Participant ID"
+// @Success      200    {object}  map[string]interface{}  "status"="ok"
+// @Failure      400    {object}  map[string]string "error"="Bad request"
+// @Failure      500    {object}  map[string]string "error"="Internal server error"
+// @Router       /api/v1/participant/{id} [delete]
+func (h *Handler) DeleteParticipantById(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	err = h.service.DeleteParticipantById(c, id)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"status": "ok",
+	})
+}

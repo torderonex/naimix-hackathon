@@ -56,3 +56,11 @@ func (s *TeamService) UpdateTeam(ctx context.Context, t entities.Team) error {
 	}
 	return err
 }
+
+func (s *TeamService) DeleteTeamById(ctx context.Context, id int) error {
+	err := s.repo.DeleteTeamById(ctx, id)
+	if err != nil {
+		slog.Error(err.Error())
+	}
+	return err
+}
