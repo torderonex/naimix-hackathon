@@ -27,7 +27,7 @@ jobs:
           # Execute commands on the server
           ssh -o StrictHostKeyChecking=no "$USERNAME@$SERVER" << 'EOF'
             # Navigate to the project directory
-            cd ~/radiomed-backend || exit
+            cd ~/naimix-hackathon || exit
           
             git fetch origin
             git reset --hard origin/main
