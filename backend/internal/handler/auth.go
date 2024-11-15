@@ -28,7 +28,7 @@ func (h *Handler) register(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	token, err := h.service.Authorization.GenerateToken(c, input.Username, input.Password)
+	token, err := h.service.Authorization.GenerateToken(c, input.Email, input.Password)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -83,7 +83,7 @@ func (h *Handler) login(c *gin.Context) {
 // getUserInfo godoc
 // @Summary      Get user information
 // @Description  Retrieve detailed information about the authenticated user.
-// @Tags         user
+// @Tags         auth
 // @Accept       json
 // @Produce      json
 // @Success      200    {object}  map[string]interface{}  "User details"
@@ -102,5 +102,6 @@ func (h *Handler) getUserInfo(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
+	info.Password = ""
 	c.JSON(http.StatusOK, info)
 }

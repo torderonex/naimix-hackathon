@@ -24,6 +24,7 @@ func (r AuthRepo) CreateUser(ctx context.Context, u entities.User) (int, error) 
 		return 0, err
 	}
 	return id, nil
+
 }
 
 func (r AuthRepo) GetAllUsers(ctx context.Context) ([]entities.User, error) {
