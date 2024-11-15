@@ -46,3 +46,9 @@ func (r TeamRepo) GetTeamsByUserId(ctx context.Context, userId int) ([]entities.
 	err := r.Db.SelectContext(ctx, &teams, query, userId)
 	return teams, err
 }
+
+func (r TeamRepo) UpdateTeam(ctx context.Context, t entities.Team) error {
+	query := "UPDATE teams SET name = $1, description = $2 WHERE id = $3"
+	_, err := r.Db.ExecContext(ctx, query, t.Name, t.Description, t.Id)
+	return err
+}

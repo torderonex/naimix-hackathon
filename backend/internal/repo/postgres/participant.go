@@ -46,3 +46,9 @@ func (r ParticipantRepo) GetParticipantsByTeamId(ctx context.Context, teamId int
 	err := r.Db.SelectContext(ctx, &participants, query, teamId)
 	return participants, err
 }
+
+func (r ParticipantRepo) UpdateParticipant(ctx context.Context, p entities.Participants) error {
+	query := "UPDATE participants SET name = $1, role = $2, birthdate = $3, birthplace = $4 WHERE id = $5"
+	_, err := r.Db.ExecContext(ctx, query, p.Name, p.Role, p.BirthDate, p.BirthPlace, p.Id)
+	return err
+}

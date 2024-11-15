@@ -35,6 +35,7 @@ type Participant interface {
 	GetAllParticipants(ctx context.Context) ([]entities.Participants, error)
 	GetParticipantById(ctx context.Context, id int) (entities.Participants, error)
 	GetParticipantsByTeamId(ctx context.Context, teamId int) ([]entities.Participants, error)
+	UpdateParticipant(ctx context.Context, p entities.Participants) error
 }
 
 type Team interface {
@@ -42,4 +43,5 @@ type Team interface {
 	GetAllTeams(ctx context.Context) ([]entities.Team, error)
 	GetTeamById(ctx context.Context, id int) (entities.Team, error)
 	GetTeamsByUserId(ctx context.Context, userId int) ([]entities.Team, error)
+	UpdateTeam(ctx context.Context, t entities.Team) error
 }
