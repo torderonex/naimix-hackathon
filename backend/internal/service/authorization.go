@@ -66,6 +66,10 @@ func generatePasswordHash(password string) string {
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }
 
+func (s *AuthService) GetUserById(ctx context.Context, id int) (entities.User, error) {
+	return s.repo.GetUserById(ctx, id)
+}
+
 func (s *AuthService) ParseToken(ctx context.Context, accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

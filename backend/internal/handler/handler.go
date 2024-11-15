@@ -29,6 +29,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		auth.POST("/signup", h.register)
 		auth.POST("/login", h.login)
+		auth.GET("/identity", h.userIdentity, h.getUserInfo)
 	}
 
 	team := v1.Group("/team")

@@ -24,6 +24,7 @@ type Authorization interface {
 	CreateUser(ctx context.Context, user entities.User) (int, error)
 	GenerateToken(ctx context.Context, login, password string) (string, error)
 	ParseToken(ctx context.Context, accessToken string) (int, error)
+	GetUserById(ctx context.Context, id int) (entities.User, error)
 }
 
 type Team interface {

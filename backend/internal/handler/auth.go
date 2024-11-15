@@ -79,3 +79,28 @@ func (h *Handler) login(c *gin.Context) {
 		"token": token,
 	})
 }
+
+// getUserInfo godoc
+// @Summary      Get user information
+// @Description  Retrieve detailed information about the authenticated user.
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Success      200    {object}  map[string]interface{}  "User details"
+// @Failure      401    {object}  map[string]string "error"="Unauthorized"
+// @Failure      500    {object}  map[string]string "error"="Internal server error"
+// @Router       /api/v1/auth/identity [get]
+// @Security     ApiKeyAuth
+func (h *Handler) getUserInfo(c *gin.Context) {
+	userId, ok := c.Get("userID")
+	if !ok {
+		newErrorResponse(c, http.StatusUnauthorized, "user is unauthorized")
+		return
+	}
+	info, err := h.service.GetUserById(c, userId.(int))
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, info)
+}
