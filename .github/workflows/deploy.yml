@@ -13,64 +13,47 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up SSH agent
-        run: |
-          eval "$(ssh-agent -s)"
-          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-
       - name: Deploy to server
         env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SERVER: ${{ secrets.SERVER }}
           USERNAME: ${{ secrets.USERNAME }}
         run: |
-          # Проверим подключение через SSH
-          echo "Testing SSH connectivity..."
-          ssh -o StrictHostKeyChecking=no "$USERNAME@$SERVER" "echo 'SSH connection successful'"
+          # Start SSH agent
+          eval "$(ssh-agent -s)"
 
-          # Выполняем команды на сервере
+          # Load SSH private key
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+
+          # Execute commands on the server
           ssh -o StrictHostKeyChecking=no "$USERNAME@$SERVER" << 'EOF'
-            echo "Running on server: $(hostname)"
-            echo "Current directory: $(pwd)"
-            echo "Current PATH: $PATH"
-
-            # Обновляем PATH для Go, Goose, и Swag
             export PATH=$PATH:/home/$USERNAME/go/bin:/usr/local/go/bin
             echo "Updated PATH: $PATH"
-
-            # Убедимся, что Go, Goose и Swag установлены
-            echo "Checking Go installation..."
-            go version || { echo "Go is not installed!"; exit 1; }
-            echo "Checking Goose installation..."
-            goose -version || { echo "Goose is not installed!"; exit 1; }
-            echo "Checking Swag installation..."
-            swag --version || { echo "Swag is not installed!"; exit 1; }
-
-            # Перейдем в проект
+            
+            # Navigate to the project directory
             cd ~/naimix-hackathon/backend || exit
-            echo "Current directory after cd: $(pwd)"
-
-            # Заберем последние изменения из репозитория
-            echo "Fetching latest code..."
+            
+            # Pull the latest changes from the repository
             git fetch origin
             git reset --hard origin/main
             
-            # Запустим миграции
+            # Run migrations (make sure to hide sensitive info in logs)
             echo "Running migrations..."
             make migrate-up | sed 's|postgresql://[^"]*|postgresql://***REMOVED***|g'
 
-            # Генерация Swagger документации
+            # Generate Swagger documentation
             echo "Generating Swagger documentation..."
             make swag
 
-            # Сборка проекта
+            # Build the project
             echo "Building the project..."
             make build
 
-            # Остановка старого приложения
+            # Stop the existing application if running
             echo "Stopping the existing application..."
             pkill -f './bin/main' || true
 
-            # Запуск нового приложения
+            # Start the new application
             echo "Starting the new application..."
             nohup ./bin/main > /dev/null 2>&1 &
           EOF
