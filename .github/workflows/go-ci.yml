@@ -18,6 +18,9 @@ jobs:
         with:
           go-version: "1.22.1"
 
+      - name: Backend dir
+        run : cd ./backend
+
       - name: Install dependencies
         run: go mod tidy
 
