@@ -7,6 +7,17 @@ import (
 	"strconv"
 )
 
+// AddParticipant godoc
+// @Summary      Add a participant
+// @Description  Add a participant to the database.
+// @Tags         participant
+// @Accept       json
+// @Produce      json
+// @Param        input  body      participantReq  true  "Participant data"
+// @Success      200    {object}  map[string]interface{}  "status"="ok"
+// @Failure      400    {object}  map[string]string "error"="Bad request"
+// @Failure      500    {object}  map[string]string "error"="Internal server error"
+// @Router       /api/v1/participant/add [post]
 func (h *Handler) AddParticipant(c *gin.Context) {
 	var input participantReq
 	if err := c.BindJSON(&input); err != nil {
@@ -32,6 +43,15 @@ type participantReq struct {
 	BirthPlace string `json:"birthplace" binding:"required"`
 }
 
+// GetAllParticipants godoc
+// @Summary      Get all participants
+// @Description  Get all participants from the database.
+// @Tags         participant
+// @Accept       json
+// @Produce      json
+// @Success      200    {object}  []entities.Participant  "participants"
+// @Failure      500    {object}  map[string]string "error"="Internal server error"
+// @Router       /api/v1/participant/all [get]
 func (h *Handler) GetAllParticipants(c *gin.Context) {
 	participants, err := h.service.GetAllParticipants(c)
 	if err != nil {
@@ -42,6 +62,17 @@ func (h *Handler) GetAllParticipants(c *gin.Context) {
 	c.JSON(http.StatusOK, participants)
 }
 
+// GetParticipantById godoc
+// @Summary      Get a participant by ID
+// @Description  Get a participant from the database by its ID.
+// @Tags         participant
+// @Accept       json
+// @Produce      json
+// @Param        id     path      int  true  "Participant ID"
+// @Success      200    {object}  entities.Participant  "participant"
+// @Failure      400    {object}  map[string]string "error"="Bad request"
+// @Failure      500    {object}  map[string]string "error"="Internal server error"
+// @Router       /api/v1/participant/{id} [get]
 func (h *Handler) GetParticipantById(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -63,6 +94,17 @@ func (h *Handler) GetParticipantById(c *gin.Context) {
 	c.JSON(http.StatusOK, participant)
 }
 
+// GetParticipantsByTeamId godoc
+// @Summary      Get participants by team ID
+// @Description  Get all participants from the database by team ID.
+// @Tags         participant
+// @Accept       json
+// @Produce      json
+// @Param        id     path      int  true  "Team ID"
+// @Success      200    {object}  []entities.Participant  "participants"
+// @Failure      400    {object}  map[string]string "error"="Bad request"
+// @Failure      500    {object}  map[string]string "error"="Internal server error"
+// @Router       /api/v1/participant/team/{id} [get]
 func (h *Handler) GetParticipantsByTeamId(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -80,6 +122,18 @@ func (h *Handler) GetParticipantsByTeamId(c *gin.Context) {
 	c.JSON(http.StatusOK, participants)
 }
 
+// UpdateParticipant godoc
+// @Summary      Update a participant
+// @Description  Update a participant in the database.
+// @Tags         participant
+// @Accept       json
+// @Produce      json
+// @Param        id     path      int            true  "Participant ID"
+// @Param        input  body      participantReq  true  "Participant data"
+// @Success      200    {object}  map[string]interface{}  "status"="ok"
+// @Failure      400    {object}  map[string]string "error"="Bad request"
+// @Failure      500    {object}  map[string]string "error"="Internal server error"
+// @Router       /api/v1/participant/{id} [put]
 func (h *Handler) UpdateParticipant(c *gin.Context) {
 	var input participantReq
 	if err := c.BindJSON(&input); err != nil {
