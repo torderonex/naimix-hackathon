@@ -1,5 +1,4 @@
 name: Deploy
-
 on:
   push:
     branches:
@@ -27,35 +26,26 @@ jobs:
 
           # Execute commands on the server
           ssh -o StrictHostKeyChecking=no "$USERNAME@$SERVER" << 'EOF'
-            exec bash -l
-            
-            export PATH=$PATH:/home/$USERNAME/go/bin:/usr/local/go/bin
-            echo "Updated PATH: $PATH"
-            
             # Navigate to the project directory
-            cd ~/naimix-hackathon/backend || exit
-            
-            # Pull the latest changes from the repository
+            cd ~/radiomed-backend || exit
+          
             git fetch origin
             git reset --hard origin/main
-            
-            # Run migrations (make sure to hide sensitive info in logs)
-            echo "Running migrations..."
+
+            cd ./backend
+
+            # Run migrations (здесь мы используем переменную окружения)
             make migrate-up | sed 's|postgresql://[^"]*|postgresql://***REMOVED***|g'
-
-            # Generate Swagger documentation
-            echo "Generating Swagger documentation..."
+            
+            # Generate documentation
             make swag
-
+            
             # Build the project
-            echo "Building the project..."
             make build
 
             # Stop the existing application if running
-            echo "Stopping the existing application..."
-            pkill -f './bin/main' || true
-
+            pkill main || true
+            
             # Start the new application
-            echo "Starting the new application..."
             nohup ./bin/main > /dev/null 2>&1 &
           EOF
