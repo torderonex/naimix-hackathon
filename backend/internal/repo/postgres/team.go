@@ -18,8 +18,8 @@ func NewTeamRepo(db *sqlx.DB) *TeamRepo {
 
 func (r TeamRepo) CreateTeam(ctx context.Context, t entities.Team) (int, error) {
 	var id int
-	query := "INSERT INTO teams (name, user_id) VALUES ($1, $2) RETURNING id"
-	row := r.Db.QueryRowContext(ctx, query, t.Name, t.UserID)
+	query := "INSERT INTO teams (name, user_id, description) VALUES ($1, $2, $3) RETURNING id"
+	row := r.Db.QueryRowContext(ctx, query, t.Name, t.UserID, t.Description)
 	if err := row.Scan(&id); err != nil {
 		return 0, err
 	}
