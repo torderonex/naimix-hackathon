@@ -18,7 +18,7 @@ func NewAuthRepo(db *sqlx.DB) *AuthRepo {
 
 func (r AuthRepo) CreateUser(ctx context.Context, u entities.User) (int, error) {
 	var id int
-	query := "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id"
+	query := "INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING id"
 	row := r.Db.QueryRowContext(ctx, query, u.Username, u.Password)
 	if err := row.Scan(&id); err != nil {
 		return 0, err
