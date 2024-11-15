@@ -37,6 +37,7 @@ func (h *Handler) AddParticipant(c *gin.Context) {
 }
 
 type participantReq struct {
+	Id         int       `json:"id"`
 	TeamId     int       `json:"team_id" binding:"required"`
 	Name       string    `json:"name" binding:"required"`
 	Role       string    `json:"role" binding:"required"`
@@ -141,7 +142,7 @@ func (h *Handler) UpdateParticipant(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	err := h.service.UpdateParticipant(c, entities.Participant{Name: input.Name, TeamID: input.TeamId, Role: input.Role, BirthDate: input.BirthDate, BirthPlace: input.BirthPlace})
+	err := h.service.UpdateParticipant(c, entities.Participant{Name: input.Name, TeamID: input.TeamId, Role: input.Role, BirthDate: input.BirthDate, BirthPlace: input.BirthPlace, Id: input.Id})
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

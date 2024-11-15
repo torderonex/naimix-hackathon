@@ -15,6 +15,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import useUserStore from "@/store/user-store";
 import TeamService from "@/services/team-service";
+import { Team } from "@/types/team";
+import { DialogClose } from "../ui/dialog";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -25,38 +27,41 @@ const formSchema = z.object({
     }),
 });
 
-export default function AddTeamForm({
+export default function EditTeamForm({
     refetchTeams,
+    team,
 }: {
     refetchTeams: () => void;
+    team: Team;
 }) {
     const { user } = useUserStore();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            description: "",
+            name: team.name,
+            description: team.description,
         },
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             if (user?.id === undefined) return;
-            const req = { ...values, user_id: user.id };
+            const req = { ...values, user_id: user.id, id: team.id };
+            console.log(req, team.id);
 
-            await TeamService.add(req);
+            await TeamService.edit(req, team.id);
 
             form.reset();
             refetchTeams();
-            toast.success("Команда успешно добавлена");
+            toast.success("Команда успешно сохранена");
         } catch (error) {
-            console.error("AddTeamForm submission error", error);
+            console.error("EditTeamForm submission error", error);
             toast.error("Ошибка при добавлении команды.");
         }
     }
 
     return (
-        <div className="w-[500px] max-w-full">
+        <div className="max-w-full">
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
@@ -102,15 +107,17 @@ export default function AddTeamForm({
                         )}
                     />
 
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        disabled={form.formState.isSubmitting}
-                    >
-                        {form.formState.isSubmitting
-                            ? "Добавление..."
-                            : "Добавить"}
-                    </Button>
+                    <DialogClose asChild>
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={form.formState.isSubmitting}
+                        >
+                            {form.formState.isSubmitting
+                                ? "Сохранение..."
+                                : "Сохранить"}
+                        </Button>
+                    </DialogClose>
                 </form>
             </Form>
         </div>

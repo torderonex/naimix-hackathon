@@ -7,8 +7,27 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import TeamActions from "./TeamActions";
+import { Team } from "@/types/team";
 
-export default function TeamsTable() {
+interface TeamsTableProps {
+    teams: Team[] | null;
+    loading: boolean;
+    refetchTeams: () => void;
+}
+
+export default function TeamsTable({
+    teams,
+    loading,
+    refetchTeams,
+}: TeamsTableProps) {
+    if (loading) {
+        return <div className="mt-10">Загрузка...</div>;
+    }
+
+    if (teams === null || teams.length === 0) {
+        return <div className="mt-10">Команд пока что нет.</div>;
+    }
+
     return (
         <div className="mt-10 w-[1200px] max-w-full">
             <h3 className="text-center my-8 text-2xl">Добавленные команды</h3>
@@ -21,15 +40,22 @@ export default function TeamsTable() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
-                        <TableCell>Фронтенд разработка</TableCell>
-                        <TableCell>
-                            Команда из Яндекса, 10 участников, ищут мидла
-                        </TableCell>
-                        <TableCell align="right">
-                            <TeamActions />
-                        </TableCell>
-                    </TableRow>
+                    {teams === null || teams.length === 0 ? (
+                        <div className="mt-10">Команд пока что нет.</div>
+                    ) : (
+                        teams.map((team) => (
+                            <TableRow key={team.id}>
+                                <TableCell>{team.name}</TableCell>
+                                <TableCell>{team.description}</TableCell>
+                                <TableCell align="right">
+                                    <TeamActions
+                                        team={team}
+                                        refetchTeams={refetchTeams}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
                 </TableBody>
             </Table>
         </div>
