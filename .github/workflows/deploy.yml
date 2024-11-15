@@ -13,28 +13,41 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up SSH agent
+        run: |
+          eval "$(ssh-agent -s)"
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+
       - name: Deploy to server
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SERVER: ${{ secrets.SERVER }}
           USERNAME: ${{ secrets.USERNAME }}
         run: |
-          # Start SSH agent
-          eval "$(ssh-agent -s)"
-
-          # Load SSH private key
-          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+          # Test SSH connectivity to the server
+          ssh -o StrictHostKeyChecking=no "$USERNAME@$SERVER" "echo 'SSH connection successful'"
 
           # Execute commands on the server
           ssh -o StrictHostKeyChecking=no "$USERNAME@$SERVER" << 'EOF'
+            # Ensure that Go, Goose, and Swag are available by setting PATH explicitly
+            export PATH=$PATH:/home/$USERNAME/go/bin:/usr/local/go/bin
+
             # Navigate to the project directory
             cd ~/naimix-hackathon/backend || exit
 
             # Pull the latest changes from the repository
+            echo "Fetching latest code..."
             git fetch origin
             git reset --hard origin/main
             
-            # Run migrations (make sure to hide sensitive info in logs)
+            # Check if Go, Goose, and Swag are available
+            echo "Checking Go installation..."
+            go version || { echo "Go not installed!"; exit 1; }
+            echo "Checking Goose installation..."
+            goose -version || { echo "Goose not installed!"; exit 1; }
+            echo "Checking Swag installation..."
+            swag --version || { echo "Swag not installed!"; exit 1; }
+
+            # Run migrations
             echo "Running migrations..."
             make migrate-up | sed 's|postgresql://[^"]*|postgresql://***REMOVED***|g'
 
