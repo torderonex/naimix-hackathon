@@ -1,9 +1,28 @@
 import $api from "@/https/api";
-import { AddTeamRequest } from "@/types/team";
+import { TeamRequest, Team } from "@/types/team";
 import { AxiosResponse } from "axios";
 
 export default class TeamService {
-    static async add(credentials: AddTeamRequest): Promise<AxiosResponse<any>> {
+    static async add(credentials: TeamRequest): Promise<AxiosResponse<void>> {
         return $api.post("team/add", credentials);
+    }
+
+    static async delete(id: number): Promise<AxiosResponse<void>> {
+        return $api.delete(`team/${id}`);
+    }
+
+    static async edit(
+        credentials: TeamRequest,
+        id: number
+    ): Promise<AxiosResponse<void>> {
+        return $api.put(`team/${id}`, credentials);
+    }
+
+    static async getAll(): Promise<AxiosResponse<Team[]>> {
+        return $api.get("team/all");
+    }
+
+    static async getById(id: number): Promise<AxiosResponse<Team>> {
+        return $api.get(`team/${id}`);
     }
 }
