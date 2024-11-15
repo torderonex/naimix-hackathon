@@ -1,0 +1,48 @@
+package postgres
+
+import (
+	"context"
+	"github.com/fullstakilla/naimix-hackathon/backend/internal/entities"
+	"github.com/jmoiron/sqlx"
+)
+
+type ParticipantRepo struct {
+	Db *sqlx.DB
+}
+
+func NewParticipantRepo(db *sqlx.DB) *ParticipantRepo {
+	return &ParticipantRepo{
+		Db: db,
+	}
+}
+
+func (r ParticipantRepo) CreateParticipant(ctx context.Context, p entities.Participants) (int, error) {
+	var id int
+	query := "INSERT INTO participants (team_id, name, role, birthdate, birthplace) VALUES ($1, $2, $3, $4, $5) RETURNING id"
+	row := r.Db.QueryRowContext(ctx, query, p.TeamID, p.Name, p.Role, p.BirthDate, p.BirthPlace)
+	if err := row.Scan(&id); err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
+func (r ParticipantRepo) GetAllParticipants(ctx context.Context) ([]entities.Participants, error) {
+	var participants []entities.Participants
+	query := "SELECT * FROM participants"
+	err := r.Db.SelectContext(ctx, &participants, query)
+	return participants, err
+}
+
+func (r ParticipantRepo) GetParticipantById(ctx context.Context, id int) (entities.Participants, error) {
+	var participant entities.Participants
+	query := "SELECT * FROM participants WHERE id = $1"
+	err := r.Db.GetContext(ctx, &participant, query, id)
+	return participant, err
+}
+
+func (r ParticipantRepo) GetParticipantsByTeamId(ctx context.Context, teamId int) ([]entities.Participants, error) {
+	var participants []entities.Participants
+	query := "SELECT * FROM participants WHERE team_id = $1"
+	err := r.Db.SelectContext(ctx, &participants, query, teamId)
+	return participants, err
+}
