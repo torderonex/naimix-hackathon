@@ -39,6 +39,15 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		team.PUT("/:id", h.UpdateTeam)
 	}
 
+	participant := v1.Group("/participant")
+	{
+		participant.POST("/add", h.AddParticipant)
+		participant.GET("/all", h.GetAllParticipants)
+		participant.GET("/:id", h.GetParticipantById)
+		participant.GET("/team/:team_id", h.GetParticipantsByTeamId)
+		participant.PUT("/:id", h.UpdateParticipant)
+	}
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return router

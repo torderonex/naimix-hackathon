@@ -31,11 +31,11 @@ type Authorization interface {
 }
 
 type Participant interface {
-	CreateParticipant(ctx context.Context, p entities.Participants) (int, error)
-	GetAllParticipants(ctx context.Context) ([]entities.Participants, error)
-	GetParticipantById(ctx context.Context, id int) (entities.Participants, error)
-	GetParticipantsByTeamId(ctx context.Context, teamId int) ([]entities.Participants, error)
-	UpdateParticipant(ctx context.Context, p entities.Participants) error
+	CreateParticipant(ctx context.Context, p entities.Participant) (int, error)
+	GetAllParticipants(ctx context.Context) ([]entities.Participant, error)
+	GetParticipantById(ctx context.Context, id int) (entities.Participant, error)
+	GetParticipantsByTeamId(ctx context.Context, teamId int) ([]entities.Participant, error)
+	UpdateParticipant(ctx context.Context, p entities.Participant) error
 }
 
 type Team interface {

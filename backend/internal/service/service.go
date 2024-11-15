@@ -9,12 +9,14 @@ import (
 type Service struct {
 	Authorization
 	Team
+	Participant
 }
 
 func New(repo *repo.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repo.Authorization),
 		Team:          NewTeamService(repo.Team),
+		Participant:   NewParticipantService(repo.Participant),
 	}
 }
 
@@ -30,4 +32,12 @@ type Team interface {
 	GetTeamById(ctx context.Context, id int) (entities.Team, error)
 	GetTeamsByUserId(ctx context.Context, userId int) ([]entities.Team, error)
 	UpdateTeam(ctx context.Context, t entities.Team) error
+}
+
+type Participant interface {
+	CreateParticipant(ctx context.Context, p entities.Participant) (int, error)
+	GetAllParticipants(ctx context.Context) ([]entities.Participant, error)
+	GetParticipantById(ctx context.Context, id int) (entities.Participant, error)
+	GetParticipantsByTeamId(ctx context.Context, teamId int) ([]entities.Participant, error)
+	UpdateParticipant(ctx context.Context, p entities.Participant) error
 }
