@@ -20,7 +20,11 @@ export default class ParticipantService {
         return $api.put(`participant/${id}`, credentials);
     }
 
-    static async getAll(): Promise<AxiosResponse<Participant[]>> {
-        return $api.get("participant/all");
+    static async getAllById(id : number): Promise<AxiosResponse<Participant[]>> {
+        return $api.get("participant/team/" + id);
+    }
+
+    static async getAllByCreator(id : number) : Promise<AxiosResponse<Participant[]>>{
+        return $api.get("participant/user/" + id);
     }
 }

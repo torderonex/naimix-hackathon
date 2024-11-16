@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { Participant } from "@/types/participant";
 import ParticipantService from "@/services/participant-service";
 
-export function useParticipants() {
+export function useParticipants(id : number) {
     const [participants, setParticipants] = useState<Participant[] | null>(
         null
     );
@@ -11,7 +11,7 @@ export function useParticipants() {
 
     async function getAllTParticipants() {
         try {
-            const response = await ParticipantService.getAll();
+            const response = await ParticipantService.getAllById(id);
             console.log(response.data);
             if (response.data === null) {
                 setParticipants([]);

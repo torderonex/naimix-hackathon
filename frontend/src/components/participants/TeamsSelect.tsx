@@ -6,6 +6,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../ui/select";
+import useUserStore from "@/store/user-store";
+
 
 interface TeamsSelectProps {
     selectedTeamId: string;
@@ -16,7 +18,8 @@ export default function TeamsSelect({
     selectedTeamId,
     onChange,
 }: TeamsSelectProps) {
-    const { teams, loading } = useTeams();
+    const { user } = useUserStore();
+    const { teams, loading } = useTeams(user!.id);
 
     if (loading) {
         return <span>Загрузка...</span>;

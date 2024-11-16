@@ -8,6 +8,7 @@ import {
 } from "@/components/auth/guards";
 import AddTeamPage from "@/pages/AddTeamPage";
 import AddParticipantPage from "@/pages/AddParticipantPage";
+import ParticipantsPage from "@/pages/ParticipantsPage";
 
 export enum routesPath {
     MAIN = "/",
@@ -16,6 +17,7 @@ export enum routesPath {
 
     ADD_PARTICIPANT = "/add-participant",
     ADD_TEAM = "/add-team",
+    PARTICIPANTS = "/team/:id"
 }
 
 export const routesConfig: RouteProps[] = [
@@ -56,4 +58,12 @@ export const routesConfig: RouteProps[] = [
             </OnlyForAuthGuard>
         ),
     },
+    {
+        path : routesPath.PARTICIPANTS,
+        element : (
+            <OnlyForAuthGuard>
+                <ParticipantsPage/>
+            </OnlyForAuthGuard>
+        ),
+    }
 ];

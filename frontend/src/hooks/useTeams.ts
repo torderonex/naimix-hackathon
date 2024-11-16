@@ -3,13 +3,13 @@ import TeamService from "@/services/team-service";
 import { toast } from "sonner";
 import { Team } from "@/types/team";
 
-export function useTeams() {
+export function useTeams(id : number) {
     const [teams, setTeams] = useState<Team[] | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     async function getAllTeams() {
         try {
-            const response = await TeamService.getAll();
+            const response = await TeamService.getAllById(id);
             if (response.data === null) {
                 setTeams([]);
             } else {

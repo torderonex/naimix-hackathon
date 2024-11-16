@@ -8,17 +8,24 @@ import {
 } from "@/components/ui/table";
 import ParticipantActions from "./ParticipantActions";
 import { Participant } from "@/types/participant";
+import ComparisonService from "@/services/comparison-service";
 
 interface ParticipantsTableProps {
     participants: Participant[] | null;
     loading: boolean;
     refetchParticipants: () => void;
+    comparisonPercents : number[] | null;
+    birthDate : string;
+    setText : (s: string) => void;
 }
 
 export default function ParticipantsTable({
     participants,
     loading,
     refetchParticipants,
+    comparisonPercents,
+    birthDate,
+    setText
 }: ParticipantsTableProps) {
     if (loading) {
         return <div className="mt-10">Загрузка...</div>;
@@ -35,6 +42,7 @@ export default function ParticipantsTable({
                         <TableHead>Роль в команде</TableHead>
                         <TableHead>Время рождения</TableHead>
                         <TableHead>Место рождения</TableHead>
+                        <TableHead>Совместимость</TableHead>
                         <TableHead className="text-end">Действия</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -44,7 +52,7 @@ export default function ParticipantsTable({
                             <TableCell>Участников пока что нет.</TableCell>
                         </TableRow>
                     ) : (
-                        participants.map((participant) => (
+                        participants.map((participant,index) => (
                             <TableRow key={participant.id}>
                                 <TableCell>{participant.name}</TableCell>
                                 <TableCell>{participant.team_name}</TableCell>
@@ -56,6 +64,12 @@ export default function ParticipantsTable({
                                         .slice(0, -4)}
                                 </TableCell>
                                 <TableCell>{participant.birthplace}</TableCell>
+                                <TableCell>
+                                    {comparisonPercents && comparisonPercents.length > index
+                                        ? `${comparisonPercents[index]}%`
+                                        : '?' 
+                                    }
+                                </TableCell>
                                 <TableCell align="right">
                                     <ParticipantActions
                                         participant={participant}
@@ -63,6 +77,19 @@ export default function ParticipantsTable({
                                             refetchParticipants
                                         }
                                     />
+                                    <span className="cursor-pointer text-amber-500"  onClick={() => {
+                                        if (!birthDate){
+                                            setText('Установите дату рождения')
+                                            return
+                                        }
+                                        const format = new Date(birthDate).toISOString()
+                                        ComparisonService.compare2(format,participant.birthdate)
+                                        .then(resp => {
+                                            setText(resp.data.description )
+                                        })
+                                    }}>
+                                        Совместимость
+                                    </span>
                                 </TableCell>
                             </TableRow>
                         ))

@@ -1,9 +1,12 @@
 import AddTeamForm from "@/components/team/AddTeamForm";
 import TeamsTable from "@/components/team/TeamsTable";
 import { useTeams } from "@/hooks/useTeams";
+import useUserStore from "@/store/user-store";
 
 export default function AddTeamPage() {
-    const { teams, loading, getAllTeams } = useTeams();
+    const { user } = useUserStore();
+    console.log(user)
+    const { teams, loading, getAllTeams } = useTeams(user?.id as number);
 
     return (
         <div className="flex flex-col items-center px-16 py-8">

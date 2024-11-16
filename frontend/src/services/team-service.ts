@@ -18,8 +18,8 @@ export default class TeamService {
         return $api.put(`team/${id}`, credentials);
     }
 
-    static async getAll(): Promise<AxiosResponse<Team[]>> {
-        return $api.get("team/all");
+    static async getAllById(id : number): Promise<AxiosResponse<Team[]>> {
+        return $api.get("team/user/" + id);
     }
 
     // static async getById(id: number): Promise<AxiosResponse<Team>> {
