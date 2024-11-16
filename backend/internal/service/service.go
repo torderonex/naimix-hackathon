@@ -4,19 +4,24 @@ import (
 	"context"
 	"github.com/fullstakilla/naimix-hackathon/backend/internal/entities"
 	"github.com/fullstakilla/naimix-hackathon/backend/internal/repo"
+	"github.com/fullstakilla/naimix-hackathon/backend/internal/webapi/sber"
+	"time"
 )
 
 type Service struct {
 	Authorization
 	Team
 	Participant
+	Comparison
 }
 
 func New(repo *repo.Repository) *Service {
+
 	return &Service{
 		Authorization: NewAuthService(repo.Authorization),
 		Team:          NewTeamService(repo.Team),
 		Participant:   NewParticipantService(repo.Participant),
+		Comparison:    NewComparisonService(sber.New()),
 	}
 }
 
@@ -43,4 +48,9 @@ type Participant interface {
 	GetParticipantsByTeamId(ctx context.Context, teamId int) ([]entities.Participant, error)
 	UpdateParticipant(ctx context.Context, p entities.Participant) error
 	DeleteParticipantById(ctx context.Context, id int) error
+}
+
+type Comparison interface {
+	GetComparisonBetween2WithDescription(date1 time.Time, date2 time.Time) (entities.ComparisonResult, error)
+	GetTeamComparison(part []entities.Participant, birthDate time.Time) ([]int, error)
 }

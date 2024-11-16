@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // AddParticipant godoc
@@ -36,12 +37,12 @@ func (h *Handler) AddParticipant(c *gin.Context) {
 }
 
 type participantReq struct {
-	Id         int    `json:"id"`
-	TeamId     int    `json:"team_id" binding:"required"`
-	Name       string `json:"name" binding:"required"`
-	Role       string `json:"role" binding:"required"`
-	BirthDate  string `json:"birthdate" binding:"required"`
-	BirthPlace string `json:"birthplace" binding:"required"`
+	Id         int       `json:"id"`
+	TeamId     int       `json:"team_id" binding:"required"`
+	Name       string    `json:"name" binding:"required"`
+	Role       string    `json:"role" binding:"required"`
+	BirthDate  time.Time `json:"birthdate" binding:"required"`
+	BirthPlace string    `json:"birthplace" binding:"required"`
 }
 
 // GetAllParticipants godoc

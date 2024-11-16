@@ -50,7 +50,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		participant.PUT("/:id", h.UpdateParticipant)
 		participant.DELETE("/:id", h.DeleteParticipantById)
 	}
-
+	compare := v1.Group("/compare")
+	{
+		compare.POST("/two", h.compareTwoWithDescription)
+		compare.POST("/lot", h.compareLot)
+	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return router
