@@ -48,8 +48,8 @@ func (r ParticipantRepo) GetParticipantsByTeamId(ctx context.Context, teamId int
 }
 
 func (r ParticipantRepo) UpdateParticipant(ctx context.Context, p entities.Participant) error {
-	query := "UPDATE participants SET name = $1, role = $2, birthdate = $3, birthplace = $4 WHERE id = $5"
-	_, err := r.Db.ExecContext(ctx, query, p.Name, p.Role, p.BirthDate, p.BirthPlace, p.Id)
+	query := "UPDATE participants SET name = COALESCE(NULLIF($1, ''), name), team_id = COALESCE(NULLIF($2, ''), team_id), role = COALESCE(NULLIF($3, ''), role), birthdate = COALESCE(NULLIF($4, ''), birthdate), birthplace = COALESCE(NULLIF($5, ''), birthplace) WHERE id = $6"
+	_, err := r.Db.ExecContext(ctx, query, p.Name, p.TeamID, p.Role, p.BirthDate, p.BirthPlace, p.Id)
 	return err
 }
 
