@@ -64,3 +64,11 @@ func (s *TeamService) DeleteTeamById(ctx context.Context, id int) error {
 	}
 	return err
 }
+
+func (s *TeamService) IsUserTeamCreator(ctx context.Context, userId, teamId int) (bool, error) {
+	team, err := s.repo.GetTeamById(ctx, teamId)
+	if err != nil {
+		return false, err
+	}
+	return team.UserID == userId, nil
+}

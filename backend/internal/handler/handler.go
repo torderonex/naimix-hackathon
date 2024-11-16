@@ -43,6 +43,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	}
 
 	participant := v1.Group("/participant")
+	participant.Use(h.userIdentity)
 	{
 		participant.POST("/add", h.AddParticipant)
 		participant.GET("/all", h.GetAllParticipants)

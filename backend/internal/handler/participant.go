@@ -115,6 +115,22 @@ func (h *Handler) GetParticipantsByTeamId(c *gin.Context) {
 		return
 	}
 
+	userId, exists := c.Get("userID")
+	if !exists {
+		newErrorResponse(c, http.StatusUnauthorized, "user not authenticated")
+		return
+	}
+
+	isCreator, err := h.service.Team.IsUserTeamCreator(c, userId.(int), id)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if !isCreator {
+		newErrorResponse(c, http.StatusForbidden, "user is not the creator of the team")
+		return
+	}
+
 	participants, err := h.service.GetParticipantsByTeamId(c, id)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -201,6 +217,18 @@ func (h *Handler) GetParticipantByCreatorId(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, "invalid creator_id param")
 		return
 	}
+
+	userId, exists := c.Get("userID")
+	if !exists {
+		newErrorResponse(c, http.StatusUnauthorized, "user not authenticated")
+		return
+	}
+
+	if userId.(int) != creatorId {
+		newErrorResponse(c, http.StatusForbidden, "user is not the creator")
+		return
+	}
+
 	participants, err := h.service.GetParticipantByCreatorId(c, creatorId)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
