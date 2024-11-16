@@ -13,7 +13,6 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { DatetimePicker } from "../ui/datetime-picker";
 import TeamsSelect from "./TeamsSelect";
 import ParticipantService from "@/services/participant-service";
 import useUserStore from "@/store/user-store";
@@ -25,7 +24,9 @@ const formSchema = z.object({
     role: z.string().min(2, {
         message: "Роль должно содержать больше двух символов.",
     }),
-    birthdate: z.coerce.date(),
+    birthdate: z.string().refine((value) => !isNaN(Date.parse(value)), {
+        message: "Неверная дата рождения.",
+    }), // Validating date string format
     birthplace: z.string().min(2, {
         message: "Место рождения должно содержать больше двух символов.",
     }),
@@ -43,7 +44,7 @@ export default function AddParticipantForm({
         defaultValues: {
             name: "",
             role: "",
-            birthdate: new Date(),
+            birthdate: new Date().toISOString().split("T")[0], // default date string in YYYY-MM-DD format
             birthplace: "",
             team_id: "",
         },
@@ -55,24 +56,20 @@ export default function AddParticipantForm({
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            console.log("onSubmit");
             if (user?.id === undefined) return;
-            console.log("values.team_id", values.team_id);
             if (values.team_id === "") {
                 toast.error(
-                    "Необходимо выбрать команду. Если ее нет - сперва создайте команду."
+                    "Необходимо выбрать команду. Если ее нет - сперва создай команду."
                 );
                 return;
             }
+
             const req = {
                 ...values,
                 team_id: parseInt(values.team_id),
                 user_id: user.id,
-                birthdate: new Date(
-                    values.birthdate.getTime() + 180 * 60 * 1000
-                ),
+                birthdate: new Date(values.birthdate), // Convert string date to Date object
             };
-            console.log(req);
 
             await ParticipantService.add(req);
 
@@ -82,7 +79,7 @@ export default function AddParticipantForm({
         } catch (error) {
             console.error("AddParticipantForm submission error", error);
             toast.error(
-                "Ошибка при добавлении участника. Проверьте данные и попробуйте еще раз."
+                "Ошибка при добавлении участника. Проверь данные и попробуй еще раз."
             );
         }
     }
@@ -102,7 +99,7 @@ export default function AddParticipantForm({
                                 <FormLabel>Имя:</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Введите Имя:"
+                                        placeholder="Введи Имя:"
                                         {...field}
                                     />
                                 </FormControl>
@@ -125,7 +122,7 @@ export default function AddParticipantForm({
                                 <FormLabel>Роль:</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Введите Роль:"
+                                        placeholder="Введи Роль:"
                                         {...field}
                                     />
                                 </FormControl>
@@ -142,16 +139,12 @@ export default function AddParticipantForm({
                         name="birthdate"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel>Дата и время рождения:</FormLabel>
-                                <DatetimePicker
-                                    {...field}
-                                    format={[
-                                        ["days", "months", "years"],
-                                        ["hours", "minutes", "seconds"],
-                                    ]}
-                                />
+                                <FormLabel>Дата рождения:</FormLabel>
+                                <FormControl>
+                                    <Input type="date" {...field} />
+                                </FormControl>
                                 <FormDescription>
-                                    Если время неизвестно - поставьте 00:00:00
+                                    Введи дату рождения участника.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -166,12 +159,12 @@ export default function AddParticipantForm({
                                 <FormLabel>Место рождения:</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Введите Место:"
+                                        placeholder="Введи Место:"
                                         {...field}
                                     />
                                 </FormControl>
                                 <FormDescription>
-                                    Введите Страну и Город
+                                    Введи Страну и Город
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>

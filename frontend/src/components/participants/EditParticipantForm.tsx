@@ -13,7 +13,6 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { DatetimePicker } from "../ui/datetime-picker";
 import TeamsSelect from "./TeamsSelect";
 import ParticipantService from "@/services/participant-service";
 import useUserStore from "@/store/user-store";
@@ -52,7 +51,9 @@ export default function EditParticipantForm({
             birthdate:
                 typeof participant.birthdate === "string"
                     ? new Date(participant.birthdate)
-                    : participant.birthdate,
+                          .toISOString()
+                          .split("T")[0]
+                    : participant.birthdate.toISOString().split("T")[0],
             birthplace: participant.birthplace,
             team_id: participant.team_id.toString(),
         },
@@ -70,11 +71,8 @@ export default function EditParticipantForm({
                 team_id: parseInt(values.team_id),
                 user_id: user.id,
                 id: participant.id,
-                birthdate: new Date(
-                    values.birthdate.getTime() + 180 * 60 * 1000
-                ),
+                birthdate: new Date(values.birthdate), // Ensure correct date conversion
             };
-            console.log(req);
 
             await ParticipantService.edit(req, participant.id);
 
@@ -84,7 +82,7 @@ export default function EditParticipantForm({
         } catch (error) {
             console.error("EditParticipantForm submission error", error);
             toast.error(
-                "Ошибка при обновлении участника. Проверьте данные и попробуйте еще раз."
+                "Ошибка при обновлении участника. Проверь данные и попробуй еще раз."
             );
         }
     }
@@ -104,7 +102,7 @@ export default function EditParticipantForm({
                                 <FormLabel>Имя:</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Введите Имя:"
+                                        placeholder="Введи Имя:"
                                         {...field}
                                     />
                                 </FormControl>
@@ -127,7 +125,7 @@ export default function EditParticipantForm({
                                 <FormLabel>Роль:</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Введите Роль:"
+                                        placeholder="Введи Роль:"
                                         {...field}
                                     />
                                 </FormControl>
@@ -143,16 +141,12 @@ export default function EditParticipantForm({
                         name="birthdate"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel>Дата и время рождения:</FormLabel>
-                                <DatetimePicker
-                                    {...field}
-                                    format={[
-                                        ["days", "months", "years"],
-                                        ["hours", "minutes", "seconds"],
-                                    ]}
-                                />
+                                <FormLabel>Дата рождения:</FormLabel>
+                                <FormControl>
+                                    <Input type="date" {...(field as any)} />
+                                </FormControl>
                                 <FormDescription>
-                                    Если время неизвестно - поставьте 00:00:00
+                                    Укажи дату рождения
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -166,12 +160,12 @@ export default function EditParticipantForm({
                                 <FormLabel>Место рождения:</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Введите Место:"
+                                        placeholder="Введи Место:"
                                         {...field}
                                     />
                                 </FormControl>
                                 <FormDescription>
-                                    Введите Страну и Город
+                                    Введи Страну и Город
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>

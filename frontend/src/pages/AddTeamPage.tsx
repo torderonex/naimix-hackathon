@@ -5,7 +5,6 @@ import useUserStore from "@/store/user-store";
 
 export default function AddTeamPage() {
     const { user } = useUserStore();
-    console.log(user)
     const { teams, loading, getAllTeams } = useTeams(user?.id as number);
 
     return (

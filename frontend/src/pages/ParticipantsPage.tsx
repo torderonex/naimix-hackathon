@@ -23,7 +23,7 @@ const ParticipantsPage = () => {
     const [percents, setPercents] = useState(null);
     const handleCalculateCompatibility = async () => {
         if (!birthDate) {
-            toast.error("Пожалуйста, выберите дату рождения.");
+            toast.error("Пожалуйста, выбери дату рождения.");
             return;
         }
 
@@ -33,28 +33,29 @@ const ParticipantsPage = () => {
         }
 
         try {
-            toast.loading("Идет рассчет...");
-            const formattedBirthDate = new Date(birthDate).toISOString(); // Преобразует в формат RFC3339 (подходит для Go)
+            toast("Идет рассчет...", {
+                duration: 1000,
+            });
+            const formattedBirthDate = new Date(birthDate).toISOString();
 
             const resp = await ComparisonService.compareLot(
                 participants,
                 formattedBirthDate
             );
-            // Извлекаем проценты из ответа
+
             const ps = resp.data;
-            console.log(ps);
             setPercents(ps.percents);
-            console.log(ps.percents);
-            // Считаем среднее значение
             const average = ps.avg;
             const description = ps.description;
 
             setCompatibility(`Общая совместимость с командой: ${average}%`);
             setDescription(description);
-            toast.success("Рассчет получен.");
+            toast("Рассчет получен.", {
+                duration: 1000,
+            });
         } catch (error) {
             console.error("Ошибка при расчете совместимости:", error);
-            toast.error("Ошибка при расчете совместимости. Попробуйте снова.");
+            toast.error("Ошибка при расчете совместимости. Попробуй снова.");
         }
     };
     return (
@@ -83,7 +84,7 @@ const ParticipantsPage = () => {
             </div>
 
             {compatibility && (
-                <div className="mb-6 text-lg font-semibold text-green-600">
+                <div className="mb-6 text-lg font-semibold text-customgreen">
                     {compatibility}
                 </div>
             )}

@@ -17,7 +17,6 @@ const userState: StateCreator<UserStoreState> = (set) => ({
         set({ isUserFetching: true });
         try {
             const response = await AuthService.identity();
-            console.log(response.data);
 
             set({ user: response.data, isAuth: true });
         } catch (error) {

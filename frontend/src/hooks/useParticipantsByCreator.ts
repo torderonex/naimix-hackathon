@@ -12,7 +12,6 @@ export function useParticipantsCreator(id: number) {
     async function getAllTParticipants() {
         try {
             const response = await ParticipantService.getAllByCreator(id);
-            console.log(response.data);
             if (response.data === null) {
                 setParticipants([]);
             } else {

@@ -43,7 +43,7 @@ function EditWithDialogBtn({
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Edit2Icon className="w-4 cursor-pointer hover:fill-orange-300" />
+                <Edit2Icon className="w-4 cursor-pointer hover:fill-primary" />
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

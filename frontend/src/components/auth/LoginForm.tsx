@@ -53,9 +53,7 @@ export default function LoginForm() {
             navigate("/");
         } catch (error) {
             console.error("LoginForm submission error", error);
-            toast.error(
-                "Ошибка при входе. Проверьте данные и попробуйте еще раз."
-            );
+            toast.error("Ошибка при входе. Проверь данные и попробуй еще раз.");
         }
     }
 
@@ -65,7 +63,7 @@ export default function LoginForm() {
                 <CardHeader>
                     <CardTitle>Вход</CardTitle>
                     <CardDescription>
-                        Войдите в аккаунт, чтобы проверять совместимость.
+                        Войди в аккаунт, чтобы проверять совместимость.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -82,7 +80,7 @@ export default function LoginForm() {
                                         <FormLabel>Почта:</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Введите Почту:"
+                                                placeholder="Введи Почту:"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -102,7 +100,7 @@ export default function LoginForm() {
                                         <FormLabel>Пароль:</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Введите пароль:"
+                                                placeholder="Введи пароль:"
                                                 type="password"
                                                 {...field}
                                             />

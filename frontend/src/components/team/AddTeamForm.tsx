@@ -70,7 +70,7 @@ export default function AddTeamForm({
                                 <FormLabel>Название:</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Введите Название:"
+                                        placeholder="Введи Название:"
                                         {...field}
                                     />
                                 </FormControl>
@@ -90,7 +90,7 @@ export default function AddTeamForm({
                                 <FormLabel>Описание:</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Введите Описание:"
+                                        placeholder="Введи Описание:"
                                         {...field}
                                     />
                                 </FormControl>

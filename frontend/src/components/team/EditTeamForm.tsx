@@ -74,7 +74,7 @@ export default function EditTeamForm({
                                 <FormLabel>Название:</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Введите Название:"
+                                        placeholder="Введи Название:"
                                         {...field}
                                     />
                                 </FormControl>
@@ -94,7 +94,7 @@ export default function EditTeamForm({
                                 <FormLabel>Описание:</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Введите Описание:"
+                                        placeholder="Введи Описание:"
                                         {...field}
                                     />
                                 </FormControl>

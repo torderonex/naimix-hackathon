@@ -58,7 +58,7 @@ export default function RegisterForm() {
         } catch (error) {
             console.error("RegisterForm submission error", error);
             toast.error(
-                "Ошибка при регистрации. Проверьте данные и попробуйте еще раз."
+                "Ошибка при регистрации. Проверь данные и попробуй еще раз."
             );
         }
     }
@@ -69,7 +69,7 @@ export default function RegisterForm() {
                 <CardHeader>
                     <CardTitle>Регистрация</CardTitle>
                     <CardDescription>
-                        Создайте аккаунт, чтобы проверять совместимость.
+                        Создай аккаунт, чтобы проверять совместимость.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -86,7 +86,7 @@ export default function RegisterForm() {
                                         <FormLabel>ФИО:</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Введите ФИО:"
+                                                placeholder="Введи ФИО:"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -106,7 +106,7 @@ export default function RegisterForm() {
                                         <FormLabel>Почта:</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Введите Почту:"
+                                                placeholder="Введи Почту:"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -126,7 +126,7 @@ export default function RegisterForm() {
                                         <FormLabel>Пароль:</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Введите пароль:"
+                                                placeholder="Введи пароль:"
                                                 type="password"
                                                 {...field}
                                             />

@@ -11,12 +11,12 @@ export default function MainPage() {
                     Добро пожаловать, {user?.username}!
                 </h1>
                 <div className="mt-10 flex gap-5">
-                    <Link to="/add-team" className="text-orange-400 underline">
+                    <Link to="/add-team" className="text-primary underline">
                         Добавить команду
                     </Link>
                     <Link
                         to="/add-participant"
-                        className="text-orange-400 underline"
+                        className="text-primary underline"
                     >
                         Добавить участника
                     </Link>
@@ -29,7 +29,7 @@ export default function MainPage() {
         <h1 className="text-lg text-bald text-center mt-20">
             Вы не авторизованы!{" "}
             <Link to="/login" className="underline">
-                Войдите
+                Войди
             </Link>{" "}
             в аккаунт, чтобы пользоваться инструментом.
         </h1>

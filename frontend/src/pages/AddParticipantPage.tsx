@@ -5,8 +5,8 @@ import useUserStore from "@/store/user-store";
 
 export default function AddParticipantPage() {
     const { user } = useUserStore();
-    console.log(user)
-    const { participants, loading, getAllTParticipants } = useParticipantsCreator(user!.id);
+    const { participants, loading, getAllTParticipants } =
+        useParticipantsCreator(user!.id);
     return (
         <div className="flex flex-col items-center px-16 py-8">
             <AddParticipantForm refetchParticipants={getAllTParticipants} />

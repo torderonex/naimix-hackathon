@@ -55,7 +55,7 @@ export default function TeamsTable({
                             >
                                 <TableCell
                                     onClick={() => handleRowClick(team.id)}
-                                    className="underline text-orange-500"
+                                    className="underline text-primary"
                                 >
                                     {team.name}
                                 </TableCell>

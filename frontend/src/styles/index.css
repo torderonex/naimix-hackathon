@@ -1,3 +1,9 @@
 @import "tailwind.css";
 @import "reset.css";
 @import "scrollbar.css";
+@import "font.css";
+
+body {
+    font-family: "MontBlanc";
+    margin: 0 auto;
+}

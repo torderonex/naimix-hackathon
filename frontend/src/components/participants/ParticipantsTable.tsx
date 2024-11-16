@@ -46,7 +46,7 @@ export default function ParticipantsTable({
                         <TableHead>Команда</TableHead>
                         <TableHead>Роль в команде</TableHead>
                         <TableHead>Время рождения</TableHead>
-                        <TableHead>Место рождения</TableHead>
+                        <TableHead>Дата рождения</TableHead>
                         <TableHead>Совместимость по натальной карте</TableHead>
                         <TableHead>Совместимость по картам таро</TableHead>
                         <TableHead className="text-end">Действия</TableHead>
@@ -65,16 +65,13 @@ export default function ParticipantsTable({
                                     onClick={() =>
                                         navigate(`/team/${participant.team_id}`)
                                     }
-                                    className="cursor-pointer text-orange-500 underline"
+                                    className="cursor-pointer text-primary underline"
                                 >
                                     {participant.team_name}
                                 </TableCell>
                                 <TableCell>{participant.role}</TableCell>
                                 <TableCell>
-                                    {participant.birthdate
-                                        .replace("T", " ")
-                                        .replace("Z", "")
-                                        .slice(0, -4)}
+                                    {participant.birthdate.split("T")[0]}
                                 </TableCell>
                                 <TableCell>{participant.birthplace}</TableCell>
                                 <TableCell align="center">
@@ -91,17 +88,19 @@ export default function ParticipantsTable({
                                                 pathname === "/add-participant"
                                             ) {
                                                 toast.error(
-                                                    "Перейдите на страницу команды для этой функции."
+                                                    "Перейди на страницу команды для этой функции."
                                                 );
                                                 return;
                                             }
                                             if (!birthDate) {
                                                 toast.error(
-                                                    "Установите дату рождения проверяемого участника."
+                                                    "Установи дату рождения проверяемого участника."
                                                 );
                                                 return;
                                             }
-                                            toast.loading("Идет рассчет...");
+                                            toast("Идет рассчет...", {
+                                                duration: 1000,
+                                            });
                                             const format = new Date(
                                                 birthDate
                                             ).toISOString();
@@ -110,9 +109,9 @@ export default function ParticipantsTable({
                                                 participant.birthdate
                                             ).then((resp) => {
                                                 setText(resp.data.description);
-                                                toast.success(
-                                                    "Рассчет получен."
-                                                );
+                                                toast("Рассчет получен.", {
+                                                    duration: 1000,
+                                                });
                                             });
                                         }}
                                     >
