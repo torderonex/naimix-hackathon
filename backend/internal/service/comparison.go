@@ -53,10 +53,11 @@ func (s *ComparisonService) GetTeamComparison(part []entities.Participant, birth
 	prompt := fmt.Sprintf(`
 Я отправлю %d карт с номером высших арканов таро и одну отдельно.  
 Отправь в формате "Совместмость: X%%" для каждой карты из списка совместимость с картой которую я отправил отдельно.
-Больше ничего не пиши. Только список совместимостей в нужном формате. 
+Больше ничего не пиши. Только список совместимостей в нужном формате. Я должен получить от тебя %d совместимостей.
+Карты:
 1)%s
 2)%d %s
-`, len(part), kuslievs, medvedev.Number, medvedev.Name)
+`, len(part), len(part), kuslievs, medvedev.Number, medvedev.Name)
 	ans, err := s.gpt.DoPrompt(prompt)
 	if err != nil {
 		slog.Error(err.Error())

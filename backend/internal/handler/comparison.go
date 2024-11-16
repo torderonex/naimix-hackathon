@@ -42,7 +42,30 @@ func (h *Handler) compareLot(c *gin.Context) {
 		return
 	}
 	ans, _ := h.service.Comparison.GetTeamComparison(input.Participants, input.BirthDate)
-	c.JSON(http.StatusOK, ans)
+	avg := 100
+	if len(ans) > 0 {
+		sum := 0
+		for _, num := range ans {
+			sum += num
+		}
+		avg = sum / len(ans)
+	}
+	desc := "! Отличная совместимость со всеми участниками команды." +
+		" Личностные качества и профессиональные навыки кандидата идеально дополняют команду, создавая гармоничную и продуктивную рабочую атмосферу. "
+	if avg <= 65 {
+		desc = "Кандидат демонстрирует средний уровень совместимости с командой. " +
+			"Его профессиональные навыки и личные качества имеют потенциал для успешного взаимодействия," +
+			" но могут потребовать дополнительной адаптации или проработки в некоторых аспектах."
+	}
+	if avg <= 40 {
+		desc = "К сожалению, кандидат демонстрирует низкий уровень совместимости с командой. Его профессиональные качества и стиль взаимодействия" +
+			" существенно отличаются от текущей динамики коллектива, что может затруднить эффективное сотрудничество. "
+	}
+	c.JSON(http.StatusOK, compareLotRes{
+		Percents:    ans,
+		Avg:         avg,
+		Description: desc,
+	})
 }
 
 type compare2Req struct {
@@ -53,4 +76,10 @@ type compare2Req struct {
 type compareLotReq struct {
 	Participants []entities.Participant `json:"patrticipants"`
 	BirthDate    time.Time              `json:"birth_date"`
+}
+
+type compareLotRes struct {
+	Percents    []int  `json:"percents"`
+	Avg         int    `json:"avg"`
+	Description string `json:"description"`
 }
