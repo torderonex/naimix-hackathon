@@ -1,7 +1,7 @@
 import HeaderLayout from "@/components/layout/header-layout";
 import { routesConfig } from "@/config/routes";
 import { Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 export default function AppRouter() {
     return (
@@ -12,6 +12,7 @@ export default function AppRouter() {
                         <Route path={path} element={element} key={path} />
                     ))}
                 </Route>
+                <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </Suspense>
     );
