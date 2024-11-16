@@ -28,14 +28,14 @@ func (r ParticipantRepo) CreateParticipant(ctx context.Context, p entities.Parti
 
 func (r ParticipantRepo) GetAllParticipants(ctx context.Context) ([]entities.Participant, error) {
 	var participants []entities.Participant
-	query := "SELECT * FROM participants"
+	query := "SELECT p.id, p.team_id, t.name AS team_name, p.name, p.role, p.birthdate, p.birthplace FROM participants p JOIN teams t ON p.team_id = t.id"
 	err := r.Db.SelectContext(ctx, &participants, query)
 	return participants, err
 }
 
 func (r ParticipantRepo) GetParticipantById(ctx context.Context, id int) (entities.Participant, error) {
 	var participant entities.Participant
-	query := "SELECT * FROM participants WHERE id = $1"
+	query := "SELECT p.id, p.team_id, t.name AS team_name, p.name, p.role, p.birthdate, p.birthplace FROM participants p JOIN teams t ON p.team_id = t.id WHERE p.id = $1"
 	err := r.Db.GetContext(ctx, &participant, query, id)
 	return participant, err
 }
