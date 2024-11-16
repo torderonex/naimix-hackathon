@@ -48,7 +48,7 @@ func (r ParticipantRepo) GetParticipantsByTeamId(ctx context.Context, teamId int
 }
 
 func (r ParticipantRepo) UpdateParticipant(ctx context.Context, p entities.Participant) error {
-	query := "UPDATE participants SET name = COALESCE(NULLIF($1, ''), name), team_id = COALESCE(NULLIF($2, 0), team_id), role = COALESCE(NULLIF($3, ''), role), birthdate = COALESCE(NULLIF($4::text, ''::text)::timestamp, birthdate), birthplace = COALESCE(NULLIF($5, ''), birthplace) WHERE id = $6"
+	query := "UPDATE participants SET name = COALESCE(NULLIF($1, ''), name), team_id = COALESCE(NULLIF($2, 0), team_id), role = COALESCE(NULLIF($3, ''), role), birthdate = COALESCE(NULLIF($4, '0001-01-01T00:00:00Z'::timestamp), now()), birthplace = COALESCE(NULLIF($5, ''), birthplace) WHERE id = $6"
 	_, err := r.Db.ExecContext(ctx, query, p.Name, p.TeamID, p.Role, p.BirthDate, p.BirthPlace, p.Id)
 	return err
 }
