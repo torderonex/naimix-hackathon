@@ -29,3 +29,6 @@ go.work.sum
 
 #static
 static
+
+.gigachat_token
+.gigachat_expires
