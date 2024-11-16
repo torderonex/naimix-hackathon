@@ -26,7 +26,7 @@ const formSchema = z.object({
     role: z.string().min(2, {
         message: "Роль должно содержать больше двух символов.",
     }),
-    birthdate: z.coerce.date(),
+    birthdate: z.string(),
     birthplace: z.string().min(2, {
         message: "Место рождения должно содержать больше двух символов.",
     }),
@@ -48,12 +48,9 @@ export default function EditParticipantForm({
         defaultValues: {
             name: participant.name,
             role: participant.role,
-            birthdate:
-                typeof participant.birthdate === "string"
-                    ? new Date(participant.birthdate)
-                          .toISOString()
-                          .split("T")[0]
-                    : participant.birthdate.toISOString().split("T")[0],
+            birthdate: new Date(participant.birthdate)
+                .toISOString()
+                .split("T")[0],
             birthplace: participant.birthplace,
             team_id: participant.team_id.toString(),
         },
