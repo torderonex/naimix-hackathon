@@ -8,7 +8,7 @@ export function OnlyForNotAuthGuard({ children }: PropsWithChildren) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isAuth) {
+        if (localStorage.getItem("auth_token")) {
             navigate("/");
         }
     }, [isAuth, navigate]);
@@ -25,7 +25,7 @@ export function OnlyForAuthGuard({ children }: PropsWithChildren) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isAuth) {
+        if (!localStorage.getItem("auth_token")) {
             navigate("/");
         }
     }, [isAuth, navigate]);
@@ -34,5 +34,5 @@ export function OnlyForAuthGuard({ children }: PropsWithChildren) {
         return <Spinner />;
     }
 
-    return isAuth ? children : null;
+    return isAuth ? children : <span>Вы не авторизованы</span>;
 }

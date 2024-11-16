@@ -17,6 +17,8 @@ import { DatetimePicker } from "../ui/datetime-picker";
 import TeamsSelect from "./TeamsSelect";
 import ParticipantService from "@/services/participant-service";
 import useUserStore from "@/store/user-store";
+import { Participant } from "@/types/participant";
+import { DialogClose } from "../ui/dialog";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -34,20 +36,25 @@ const formSchema = z.object({
     }),
 });
 
-export default function AddParticipantForm({
+export default function EditParticipantForm({
     refetchParticipants,
+    participant,
 }: {
     refetchParticipants: () => void;
+    participant: Participant;
 }) {
     const { user } = useUserStore();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            role: "",
-            birthdate: new Date(),
-            birthplace: "",
-            team_id: "",
+            name: participant.name,
+            role: participant.role,
+            birthdate:
+                typeof participant.birthdate === "string"
+                    ? new Date(participant.birthdate)
+                    : participant.birthdate,
+            birthplace: participant.birthplace,
+            team_id: participant.team_id.toString(),
         },
     });
 
@@ -62,27 +69,28 @@ export default function AddParticipantForm({
                 ...values,
                 team_id: parseInt(values.team_id),
                 user_id: user.id,
+                id: participant.id,
                 birthdate: new Date(
                     values.birthdate.getTime() + 180 * 60 * 1000
                 ),
             };
             console.log(req);
 
-            await ParticipantService.add(req);
+            await ParticipantService.edit(req, participant.id);
 
             form.reset();
             refetchParticipants();
-            toast.success("Участник успешно добавлен");
+            toast.success("Участник успешно обновлен");
         } catch (error) {
-            console.error("AddParticipantForm submission error", error);
+            console.error("EditParticipantForm submission error", error);
             toast.error(
-                "Ошибка при добавлении участника. Проверьте данные и попробуйте еще раз."
+                "Ошибка при обновлении участника. Проверьте данные и попробуйте еще раз."
             );
         }
     }
 
     return (
-        <div className="w-[500px] max-w-full">
+        <div className="max-w-full">
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
@@ -130,7 +138,6 @@ export default function AddParticipantForm({
                             </FormItem>
                         )}
                     />
-
                     <FormField
                         control={form.control}
                         name="birthdate"
@@ -151,7 +158,6 @@ export default function AddParticipantForm({
                             </FormItem>
                         )}
                     />
-
                     <FormField
                         control={form.control}
                         name="birthplace"
@@ -172,15 +178,17 @@ export default function AddParticipantForm({
                         )}
                     />
 
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        disabled={form.formState.isSubmitting}
-                    >
-                        {form.formState.isSubmitting
-                            ? "Добавление..."
-                            : "Добавить"}
-                    </Button>
+                    <DialogClose asChild>
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={form.formState.isSubmitting}
+                        >
+                            {form.formState.isSubmitting
+                                ? "Обновление..."
+                                : "Обновить"}
+                        </Button>
+                    </DialogClose>
                 </form>
             </Form>
         </div>

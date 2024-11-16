@@ -47,6 +47,7 @@ export function HeaderLayoutRight() {
 
     const handleLogout = () => {
         deleteCurrentUser();
+        localStorage.removeItem("auth_token");
         navigate("/");
     };
 

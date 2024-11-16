@@ -24,10 +24,6 @@ export default function TeamsTable({
         return <div className="mt-10">Загрузка...</div>;
     }
 
-    if (teams === null || teams.length === 0) {
-        return <div className="mt-10">Команд пока что нет.</div>;
-    }
-
     return (
         <div className="mt-10 w-[1200px] max-w-full">
             <h3 className="text-center my-8 text-2xl">Добавленные команды</h3>
@@ -41,7 +37,9 @@ export default function TeamsTable({
                 </TableHeader>
                 <TableBody>
                     {teams === null || teams.length === 0 ? (
-                        <div className="mt-10">Команд пока что нет.</div>
+                        <TableRow>
+                            <TableCell>Команд пока что нет.</TableCell>
+                        </TableRow>
                     ) : (
                         teams.map((team) => (
                             <TableRow key={team.id}>
