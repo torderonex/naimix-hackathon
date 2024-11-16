@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import ComparisonService from "@/services/comparison-service";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+
 const ParticipantsPage = () => {
     const location = useLocation();
     const id = location.pathname.split("/").pop();
@@ -17,10 +20,10 @@ const ParticipantsPage = () => {
     const [birthDate, setBirthDate] = useState<string>("");
     const [compatibility, setCompatibility] = useState<string | null>(null);
     const [description, setDescription] = useState<string | null>(null);
-
+    const [average, setAverage] = useState<number | null>(null);
     const [text, setText] = useState<string>("");
-
     const [percents, setPercents] = useState(null);
+
     const handleCalculateCompatibility = async () => {
         if (!birthDate) {
             toast.error("Пожалуйста, выбери дату рождения.");
@@ -46,6 +49,7 @@ const ParticipantsPage = () => {
             const ps = resp.data;
             setPercents(ps.percents);
             const average = ps.avg;
+            setAverage(average); // Set average state
             const description = ps.description;
 
             setCompatibility(`Общая совместимость с командой: ${average}%`);
@@ -58,6 +62,7 @@ const ParticipantsPage = () => {
             toast.error("Ошибка при расчете совместимости. Попробуй снова.");
         }
     };
+
     return (
         <div className="flex flex-col items-center px-16 py-8">
             <h2 className="text-2xl mb-6">
@@ -77,7 +82,7 @@ const ParticipantsPage = () => {
                 />
                 <Button
                     onClick={handleCalculateCompatibility}
-                    className="text-white px-4 py-2  "
+                    className="text-white px-4 py-2"
                 >
                     Рассчитать совместимость всей команды
                 </Button>
@@ -86,6 +91,30 @@ const ParticipantsPage = () => {
             {compatibility && (
                 <div className="mb-6 text-lg font-semibold text-customgreen">
                     {compatibility}
+                </div>
+            )}
+
+            {average !== null && (
+                <div className="mb-6 w-40 h-40">
+                    <CircularProgressbar
+                        value={average}
+                        text={`${average}%`}
+                        styles={buildStyles({
+                            textColor:
+                                average <= 35
+                                    ? "#FF0000"
+                                    : average <= 70
+                                    ? "#FFA500"
+                                    : "#0e6666",
+                            pathColor:
+                                average <= 35
+                                    ? "#FF0000"
+                                    : average <= 70
+                                    ? "#FFA500"
+                                    : "#0e6666",
+                            trailColor: "#d6d6d6",
+                        })}
+                    />
                 </div>
             )}
 
