@@ -58,3 +58,10 @@ func (r ParticipantRepo) DeleteParticipantById(ctx context.Context, id int) erro
 	_, err := r.Db.ExecContext(ctx, query, id)
 	return err
 }
+
+func (r ParticipantRepo) GetParticipantByCreatorId(ctx context.Context, creatorId int) ([]entities.Participant, error) {
+	var participants []entities.Participant
+	query := "SELECT p.id, p.team_id, t.name AS team_name, p.name, p.role, p.birthdate, p.birthplace FROM participants p JOIN teams t ON p.team_id = t.id WHERE t.user_id = $1"
+	err := r.Db.SelectContext(ctx, &participants, query, creatorId)
+	return participants, err
+}

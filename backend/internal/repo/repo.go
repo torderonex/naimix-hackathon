@@ -37,6 +37,7 @@ type Participant interface {
 	GetParticipantsByTeamId(ctx context.Context, teamId int) ([]entities.Participant, error)
 	UpdateParticipant(ctx context.Context, p entities.Participant) error
 	DeleteParticipantById(ctx context.Context, id int) error
+	GetParticipantByCreatorId(ctx context.Context, creatorId int) ([]entities.Participant, error)
 }
 
 type Team interface {

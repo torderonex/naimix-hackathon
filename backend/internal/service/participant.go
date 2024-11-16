@@ -63,3 +63,11 @@ func (s *ParticipantService) DeleteParticipantById(ctx context.Context, id int) 
 	}
 	return nil
 }
+
+func (s *ParticipantService) GetParticipantByCreatorId(ctx context.Context, creatorId int) ([]entities.Participant, error) {
+	participants, err := s.repo.GetParticipantByCreatorId(ctx, creatorId)
+	if err != nil {
+		return nil, err
+	}
+	return participants, nil
+}

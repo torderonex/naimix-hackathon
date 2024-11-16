@@ -50,6 +50,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		participant.GET("/team/:id", h.GetParticipantsByTeamId)
 		participant.PUT("/:id", h.UpdateParticipant)
 		participant.DELETE("/:id", h.DeleteParticipantById)
+		participant.GET("/user/:id", h.GetParticipantByCreatorId)
 	}
 	compare := v1.Group("/compare")
 	{

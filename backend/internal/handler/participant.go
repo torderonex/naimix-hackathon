@@ -182,3 +182,30 @@ func (h *Handler) DeleteParticipantById(c *gin.Context) {
 		"status": "ok",
 	})
 }
+
+// GetParticipantByCreatorId godoc
+// @Summary      Get participants by creator ID
+// @Description  Get all participants from the database by creator ID.
+// @Tags         participant
+// @Accept       json
+// @Produce      json
+// @Param        id     path      int  true  "Creator ID"
+// @Success      200    {object}  []entities.Participant  "participants"
+// @Failure      400    {object}  map[string]string "error"="Bad request"
+// @Failure      500    {object}  map[string]string "error"="Internal server error"
+// @Router       /api/v1/participant/creator/{id} [get]
+func (h *Handler) GetParticipantByCreatorId(c *gin.Context) {
+	creatorIdStr := c.Param("id")
+	creatorId, err := strconv.Atoi(creatorIdStr)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid creator_id param")
+		return
+	}
+	participants, err := h.service.GetParticipantByCreatorId(c, creatorId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, participants)
+}
