@@ -2,6 +2,7 @@ import { Edit2Icon, Trash2Icon } from "lucide-react";
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -41,6 +42,9 @@ function EditWithDialogBtn({
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Редактировать команду</DialogTitle>
+                    <DialogDescription>
+                        Редактирование добавленной команды.
+                    </DialogDescription>
                 </DialogHeader>
                 <EditTeamForm refetchTeams={refetchTeams} team={team} />
             </DialogContent>

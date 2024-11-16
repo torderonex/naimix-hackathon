@@ -2,7 +2,10 @@ import { RouteProps } from "react-router-dom";
 import MainPage from "@/pages/MainPage";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
-import { OnlyForNotAuthGuard } from "@/components/auth/guards";
+import {
+    OnlyForAuthGuard,
+    OnlyForNotAuthGuard,
+} from "@/components/auth/guards";
 import AddTeamPage from "@/pages/AddTeamPage";
 import AddParticipantPage from "@/pages/AddParticipantPage";
 
@@ -39,10 +42,18 @@ export const routesConfig: RouteProps[] = [
 
     {
         path: routesPath.ADD_TEAM,
-        element: <AddTeamPage />,
+        element: (
+            <OnlyForAuthGuard>
+                <AddTeamPage />
+            </OnlyForAuthGuard>
+        ),
     },
     {
         path: routesPath.ADD_PARTICIPANT,
-        element: <AddParticipantPage />,
+        element: (
+            <OnlyForAuthGuard>
+                <AddParticipantPage />
+            </OnlyForAuthGuard>
+        ),
     },
 ];

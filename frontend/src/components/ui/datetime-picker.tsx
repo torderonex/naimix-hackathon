@@ -158,15 +158,12 @@ export const DatetimePicker = forwardRef<HTMLDivElement, DateTimeInput>(
             (nextDate: Date | undefined) => {
                 if (onChange) {
                     onChange(nextDate);
-                } else {
-                    console.log(nextDate);
                 }
             },
             [onChange]
         );
 
         const localDate = new Date(value);
-        console.log("localDate", localDate);
 
         const timescape = useTimescape({
             date: localDate,

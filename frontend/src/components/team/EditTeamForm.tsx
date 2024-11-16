@@ -47,7 +47,6 @@ export default function EditTeamForm({
         try {
             if (user?.id === undefined) return;
             const req = { ...values, user_id: user.id, id: team.id };
-            console.log(req, team.id);
 
             await TeamService.edit(req, team.id);
 

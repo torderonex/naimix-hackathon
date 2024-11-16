@@ -22,7 +22,7 @@ export default class TeamService {
         return $api.get("team/all");
     }
 
-    static async getById(id: number): Promise<AxiosResponse<Team>> {
-        return $api.get(`team/${id}`);
-    }
+    // static async getById(id: number): Promise<AxiosResponse<Team>> {
+    //     return $api.get(`team/${id}`);
+    // }
 }
