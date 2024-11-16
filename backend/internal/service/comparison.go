@@ -1,6 +1,8 @@
 package service
 
 import (
+	"crypto/md5"
+	"encoding/binary"
 	"errors"
 	"fmt"
 	"github.com/fullstakilla/naimix-hackathon/backend/internal/entities"
@@ -59,13 +61,14 @@ func (s *ComparisonService) GetTeamComparison(part []entities.Participant, birth
 2)%d %s
 `, len(part), len(part), kuslievs, medvedev.Number, medvedev.Name)
 	ans, err := s.gpt.DoPrompt(prompt)
+	slog.Info(ans)
 	if err != nil {
 		slog.Error(err.Error())
-		return GenerateNRandomNums(len(part)), nil
+		return GenerateNumsFromParticipants(part), nil
 	}
 	res, err := ExtractAllCompatibilities(ans)
 	if err != nil {
-		return GenerateNRandomNums(len(part)), nil
+		return GenerateNumsFromParticipants(part), nil
 	}
 	return res, nil
 }
@@ -106,7 +109,7 @@ func ExtractAllCompatibilities(response string) ([]int, error) {
 	var compatibilities []int
 	for _, match := range matches {
 		if len(match) > 1 {
-			compatibility, err := strconv.Atoi(match[1]) // Преобразуем в число
+			compatibility, err := strconv.Atoi(match[1])
 			if err != nil {
 				return nil, err
 			}
@@ -114,4 +117,17 @@ func ExtractAllCompatibilities(response string) ([]int, error) {
 		}
 	}
 	return compatibilities, nil
+}
+
+func GenerateNumsFromParticipants(part []entities.Participant) []int {
+	results := make([]int, len(part))
+
+	for i, p := range part {
+		data := []byte(p.Name + p.TeamName + p.Role + p.BirthPlace + p.BirthDate.Format("2006-01-02"))
+		hash := md5.Sum(data)
+
+		results[i] = int(binary.BigEndian.Uint32(hash[:4])) % 100 // Ограничим числа диапазоном 0-99
+	}
+
+	return results
 }
