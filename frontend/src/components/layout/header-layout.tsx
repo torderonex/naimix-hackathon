@@ -16,20 +16,27 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import useUserStore from "@/store/user-store";
+import { useMediaQuery } from "react-responsive";
 
 export default function HeaderLayout() {
+    const responsive = useMediaQuery({
+        query: "(min-width: 550px)",
+    });
+
     return (
         <>
-            <header className="flex justify-between py-3 px-16 items-center my-0 mx-auto top-0 sticky w-full bg-white z-50 shadow h-[72px]">
+            <header className="flex justify-between py-3 px-16 items-center top-0 sticky w-full bg-white z-50 shadow h-[72px]">
                 <div className="flex items-center gap-10">
-                    <Link to="/">
-                        <img
-                            src="/logo.svg"
-                            alt="Naimix"
-                            height={0}
-                            width={150}
-                        />
-                    </Link>
+                    {responsive && (
+                        <Link to="/">
+                            <img
+                                src="/logo.svg"
+                                alt="Naimix"
+                                className="logo"
+                                height={0}
+                            />
+                        </Link>
+                    )}
                     <HeaderLayoutNav />
                 </div>
                 <HeaderLayoutRight />
@@ -97,16 +104,16 @@ export function HeaderLayoutNav() {
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <NavigationMenuLink
-                        href="/add-team"
-                        className={navigationMenuTriggerStyle()}
-                    >
-                        Добавить команду
-                    </NavigationMenuLink>
-                    <NavigationMenuLink
                         href="/add-participant"
                         className={navigationMenuTriggerStyle()}
                     >
-                        Добавить участника
+                        Участники
+                    </NavigationMenuLink>
+                    <NavigationMenuLink
+                        href="/add-team"
+                        className={navigationMenuTriggerStyle()}
+                    >
+                        Команды
                     </NavigationMenuLink>
                 </NavigationMenuItem>
             </NavigationMenuList>

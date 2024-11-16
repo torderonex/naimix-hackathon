@@ -29,9 +29,7 @@ const formSchema = z.object({
     birthplace: z.string().min(2, {
         message: "Место рождения должно содержать больше двух символов.",
     }),
-    team_id: z.string().min(1, {
-        message: "Необходимо выбрать команду.",
-    }),
+    team_id: z.string(),
 });
 
 export default function AddParticipantForm({
@@ -57,7 +55,15 @@ export default function AddParticipantForm({
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
+            console.log("onSubmit");
             if (user?.id === undefined) return;
+            console.log("values.team_id", values.team_id);
+            if (values.team_id === "") {
+                toast.error(
+                    "Необходимо выбрать команду. Если ее нет - сперва создайте команду."
+                );
+                return;
+            }
             const req = {
                 ...values,
                 team_id: parseInt(values.team_id),

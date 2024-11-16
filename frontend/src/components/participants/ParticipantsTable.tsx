@@ -9,14 +9,16 @@ import {
 import ParticipantActions from "./ParticipantActions";
 import { Participant } from "@/types/participant";
 import ComparisonService from "@/services/comparison-service";
+import { toast } from "sonner";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface ParticipantsTableProps {
     participants: Participant[] | null;
     loading: boolean;
     refetchParticipants: () => void;
-    comparisonPercents : number[] | null;
-    birthDate : string;
-    setText : (s: string) => void;
+    comparisonPercents: number[] | null;
+    birthDate: string;
+    setText: (s: string) => void;
 }
 
 export default function ParticipantsTable({
@@ -25,8 +27,11 @@ export default function ParticipantsTable({
     refetchParticipants,
     comparisonPercents,
     birthDate,
-    setText
+    setText,
 }: ParticipantsTableProps) {
+    const { pathname } = useLocation();
+    const navigate = useNavigate();
+
     if (loading) {
         return <div className="mt-10">Загрузка...</div>;
     }
@@ -42,7 +47,8 @@ export default function ParticipantsTable({
                         <TableHead>Роль в команде</TableHead>
                         <TableHead>Время рождения</TableHead>
                         <TableHead>Место рождения</TableHead>
-                        <TableHead>Совместимость</TableHead>
+                        <TableHead>Совместимость по натальной карте</TableHead>
+                        <TableHead>Совместимость по картам таро</TableHead>
                         <TableHead className="text-end">Действия</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -52,10 +58,17 @@ export default function ParticipantsTable({
                             <TableCell>Участников пока что нет.</TableCell>
                         </TableRow>
                     ) : (
-                        participants.map((participant,index) => (
+                        participants.map((participant, index) => (
                             <TableRow key={participant.id}>
                                 <TableCell>{participant.name}</TableCell>
-                                <TableCell>{participant.team_name}</TableCell>
+                                <TableCell
+                                    onClick={() =>
+                                        navigate(`/team/${participant.team_id}`)
+                                    }
+                                    className="cursor-pointer text-orange-500 underline"
+                                >
+                                    {participant.team_name}
+                                </TableCell>
                                 <TableCell>{participant.role}</TableCell>
                                 <TableCell>
                                     {participant.birthdate
@@ -64,11 +77,47 @@ export default function ParticipantsTable({
                                         .slice(0, -4)}
                                 </TableCell>
                                 <TableCell>{participant.birthplace}</TableCell>
-                                <TableCell>
-                                    {comparisonPercents && comparisonPercents.length > index
+                                <TableCell align="center">
+                                    {comparisonPercents &&
+                                    comparisonPercents.length > index
                                         ? `${comparisonPercents[index]}%`
-                                        : '?' 
-                                    }
+                                        : "Не вычеслено"}
+                                </TableCell>
+                                <TableCell align="center">
+                                    <span
+                                        className="cursor-pointer text-amber-500 text-center"
+                                        onClick={() => {
+                                            if (
+                                                pathname === "/add-participant"
+                                            ) {
+                                                toast.error(
+                                                    "Перейдите на страницу команды для этой функции."
+                                                );
+                                                return;
+                                            }
+                                            if (!birthDate) {
+                                                toast.error(
+                                                    "Установите дату рождения проверяемого участника."
+                                                );
+                                                return;
+                                            }
+                                            toast.loading("Идет рассчет...");
+                                            const format = new Date(
+                                                birthDate
+                                            ).toISOString();
+                                            ComparisonService.compare2(
+                                                format,
+                                                participant.birthdate
+                                            ).then((resp) => {
+                                                setText(resp.data.description);
+                                                toast.success(
+                                                    "Рассчет получен."
+                                                );
+                                            });
+                                        }}
+                                    >
+                                        Рассчитать
+                                    </span>
                                 </TableCell>
                                 <TableCell align="right">
                                     <ParticipantActions
@@ -77,19 +126,6 @@ export default function ParticipantsTable({
                                             refetchParticipants
                                         }
                                     />
-                                    <span className="cursor-pointer text-amber-500"  onClick={() => {
-                                        if (!birthDate){
-                                            setText('Установите дату рождения')
-                                            return
-                                        }
-                                        const format = new Date(birthDate).toISOString()
-                                        ComparisonService.compare2(format,participant.birthdate)
-                                        .then(resp => {
-                                            setText(resp.data.description )
-                                        })
-                                    }}>
-                                        Совместимость
-                                    </span>
                                 </TableCell>
                             </TableRow>
                         ))

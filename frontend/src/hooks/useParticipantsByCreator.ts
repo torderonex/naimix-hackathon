@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { Participant } from "@/types/participant";
 import ParticipantService from "@/services/participant-service";
 
-export function useParticipantsCreator(id : number) {
+export function useParticipantsCreator(id: number) {
     const [participants, setParticipants] = useState<Participant[] | null>(
         null
     );

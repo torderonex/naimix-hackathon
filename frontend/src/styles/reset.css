@@ -28,3 +28,9 @@ a {
     margin: 0;
     padding: 0;
 }
+
+@media (max-width: 640px) {
+    .logo {
+        display: block;
+    }
+}

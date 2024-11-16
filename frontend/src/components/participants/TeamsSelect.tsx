@@ -8,7 +8,6 @@ import {
 } from "../ui/select";
 import useUserStore from "@/store/user-store";
 
-
 interface TeamsSelectProps {
     selectedTeamId: string;
     onChange: (value: string) => void;
@@ -26,7 +25,7 @@ export default function TeamsSelect({
     }
 
     if (teams === null || teams.length === 0) {
-        return <span>Нет команд для выбора.</span>;
+        return <span className="flex mt-10">Нет команд для выбора.</span>;
     }
 
     return (
